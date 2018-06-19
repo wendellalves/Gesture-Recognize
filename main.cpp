@@ -57,14 +57,14 @@ int main(int argc, char** argv) {
     
         
     //test.organizeCSV();
-    test.organizeCSVAruco();
+    //test.organizeCSVAruco();
     //test.trainSVM();
     //test.leitorCSV();
-    //test.loadSVM();
+    test.loadSVM();
     //test.colorDataSet(); 
     //test.acelerometroDataSet();
     //test.loadNetwork(); 
-    // test.armInLine();
+    //test.armInLine();
     //test.arucoDataSet();
     return 0;
 }

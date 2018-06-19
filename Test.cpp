@@ -104,8 +104,8 @@ void Test::organizeCSVAruco()
     aux2 = ".csv";
 
     for (int i = 1; i < 16; i++)
-    {   
-        std::string aux = std::to_string(i);
+    {
+        aux = std::to_string(i);
         arquivoIn = "data/dadosAruco/Tras/tras";
         arquivoIn += aux;
         arquivoIn += aux2;
@@ -145,44 +145,6 @@ void Test::organizeCSVAruco()
 
         myfile.close();
     }
-    // std::string aux = std::to_string(x);
-    // std::cout << aux << std::endl;
-    //     arquivoIn = "data/dadosAruco/Direita/direita";
-    //     std::cout << arquivoIn << std:: endl;
-    //     arquivoIn += aux;
-    //     std::cout << arquivoIn << std:: endl;
-    //     //arquivoIn.pop_back
-
-    // std::string csvBug = "data/dadosAruco/Direita/direita10.csv";
-    // std::string csvOrganizado = "data/dadosAruco/DEFTNew/direita10.csv";
-
-    // // Creating an object of CSVWriter
-    // CSVReader reader(csvBug);
-
-    // std::ofstream myfile;
-    // myfile.open(csvOrganizado);
-
-    // // Get the data from CSV File
-    // std::vector<std::vector<std::string> > dataList = reader.getData();
-
-    // linhas = dataList.size();
-
-    // myfile << linhas << " " << colunas << "\n";
-
-    // for (std::vector<std::string> vec : dataList) {
-    //     for (std::string data : vec) {
-    //         myfile << data;
-    //         myfile << " ";
-    //         cont++;
-    //         if (cont == 2) {
-    //             myfile << "\n";
-    //             cont = 0;
-    //         }
-    //     }
-    // }
-    // //std::cout << dataList.size();
-
-    // myfile.close();
 }
 
 void Test::acelerometroDataSet()
@@ -332,75 +294,123 @@ void Test::loadNetwork()
     //Node* vencedor;
     //std::vector <Node*> vencedores; // v = find  ...
 
-    //int imagem[tamImagem][tamImagem];
+    std::string dataIn, imageOutVisual, imageOutTrain, aux, aux2, aux3;
+    aux2 = ".csv";
+    aux3 = ".jpg";
 
-    for (int i = 0; i < tamImagem; i++)
-    {
-        for (int j = 0; j < tamImagem; j++)
-        {
-            //imagem[i][j] = 0;
-            image.at<uchar>(i, j) = 0;
-        }
-    }
+    //int imagem[tamImagem][tamImagem];
 
     som.loadNetworkAruco("visualization/treinamentoAruco/150.csv", tam);
 
-    data.loadDataFromFile("Samples_Data/testeNew.csv");
-    //data.show();
-    //som.printNodes(1);
-    s = data.getRandomSample();
-    som.findWinner(s, iImagem, jImagem);
-    //vencedor = som.findNodeWinner(s);
-
-    //vencedores.push_back(vencedor);
-
-    while (!(data.getRandomSample(s)))
+    for (int i = 1; i < 16; i++)
     {
-        som.findWinner(s, iImagem, jImagem);
-        //vencedor = som.findNodeWinner(s);
-        //std::cout << vencedor->getLabel() << std::endl;
-
-        //std::cout << vencedor->getLabel();
-        //posImagem = vencedor->getLabel();
-
-        //Pega o label e transforma em dois valores de int
-        //iImagem = atoi(posImagem.substr(0, posImagem.find("-")).c_str());
-        //jImagem = atoi(posImagem.substr(posImagem.find("-") + 1, posImagem.length()).c_str());
-
-        //std::cout << iImagem << std::endl;
-        //std::cout << jImagem << std::endl;
-
-        imagem.at<uchar>(iImagem, jImagem) = 255;
-        for (int i = iImagem * 80; i < (iImagem * 80 + 80); i++)
+        for (int i = 0; i < tamImagem; i++)
         {
-            for (int j = jImagem * 80; j < (jImagem * 80 + 80); j++)
+            for (int j = 0; j < tamImagem; j++)
             {
-                image.at<uchar>(i, j) = 255;
+                //imagem[i][j] = 0;
+                image.at<uchar>(i, j) = 0;
             }
         }
-        //image.at<uchar>(iImagem, jImagem) = 255;
 
-        //vencedores.push_back(vencedor);
+        for (int i = 0; i < tam; i++)
+        {
+            for (int j = 0; j < tam; j++)
+            {
+                imagem.at<uchar>(i, j) = 0;
+            }
+        }
+
+        aux = std::to_string(i);
+        dataIn = "data/dadosAruco/DEFTNew/tras";
+        dataIn += aux;
+        dataIn += aux2;
+
+        imageOutVisual = "resultadosSom/visualizar/trasVisual";
+        imageOutVisual += aux;
+        imageOutVisual += aux3;
+
+        imageOutTrain = "resultadosSom/treinar/trasTrain";
+        imageOutTrain += aux;
+        imageOutTrain += aux3;
+
+        data.loadDataFromFile(dataIn);
+
+        s = data.getRandomSample();
+        som.findWinner(s, iImagem, jImagem);
+
+        while (!(data.getRandomSample(s)))
+        {
+            som.findWinner(s, iImagem, jImagem);
+
+            imagem.at<uchar>(iImagem, jImagem) = 255;
+
+            for (int i = iImagem * 80; i < (iImagem * 80 + 80); i++)
+            {
+                for (int j = jImagem * 80; j < (jImagem * 80 + 80); j++)
+                {
+                    image.at<uchar>(i, j) = 255;
+                }
+            }
+        }
+
+        //cv::imshow("Nodes", image);
+        cv::imwrite(imageOutVisual, image);
+        cv::imwrite(imageOutTrain, imagem);
     }
-
-    cv::imshow("Nodes", image);
-    cv::imwrite("resultadosSom/ImagemSaidaAruco1.jpg", image);
-    cv::imwrite("resultadosSom/ImagemSaidaAruco1P.jpg", imagem);
-    cv::waitKey();
+    //cv::waitKey();
 }
 
 void Test::trainSVM()
 {
-    // Data for visual representation
-    int width = 512, height = 512;
-    cv::Mat image = cv::Mat::zeros(height, width, CV_8UC3);
-
-    int labels[2] = {1, -1};
     int lin = 10, col = 10;
-    int qntImg = 2, tamImg = lin * col;
+    int qntImg = 60, tamImg = lin * col;
+    int labels[qntImg];
     std::vector<cv::Mat> imagem(qntImg);
-    imagem[0] = cv::imread("ImagemSaidaArucoP.jpg", 0);
-    imagem[1] = cv::imread("ImagemSaida1P.jpg", 0);
+
+    std::string dataIn, aux, aux2;
+    aux2 = ".jpg";
+
+    for (int i = 1; i < 61; i++)
+    {
+        if (i < 16)
+        {
+            aux = std::to_string(i);
+            dataIn = "resultadosSom/treinar/direitaTrain";
+            dataIn += aux;
+            dataIn += aux2;
+            imagem[i - 1] = cv::imread(dataIn, 0);
+            labels[i - 1] = 2;
+        }
+        else if (i < 31)
+        {
+            aux = std::to_string(i - 15);
+            dataIn = "resultadosSom/treinar/esquerdaTrain";
+            dataIn += aux;
+            dataIn += aux2;
+            imagem[i - 1] = cv::imread(dataIn, 0);
+            labels[i - 1] = -2;
+        }
+        else if (i < 46)
+        {
+            aux = std::to_string(i - 30);
+            dataIn = "resultadosSom/treinar/frenteTrain";
+            dataIn += aux;
+            dataIn += aux2;
+            imagem[i - 1] = cv::imread(dataIn, 0);
+            labels[i - 1] = 1;
+        }
+        else
+        {
+            aux = std::to_string(i - 45);
+            dataIn = "resultadosSom/treinar/trasTrain";
+            dataIn += aux;
+            dataIn += aux2;
+            imagem[i - 1] = cv::imread(dataIn, 0);
+            labels[i - 1] = -1;
+        }
+    }
+
     int ii = 0;
     cv::Mat matImage(qntImg, tamImg, CV_32FC1);
     for (int k = 0; k < qntImg; k++)
@@ -409,20 +419,10 @@ void Test::trainSVM()
         {
             for (int j = 0; j < col; j++)
             {
-                matImage.at<float>(k, ii++) = imagem[k].at<uchar>(i, j);
+                matImage.at<float>(k, 0) = imagem[k].at<uchar>(0, 0);
             }
         }
         ii = 0;
-    }
-
-    cv::Mat testeImage(1, tamImg, CV_32FC1);
-    int jj = 0;
-    for (int i = 0; i < lin; i++)
-    {
-        for (int j = 0; j < col; j++)
-        {
-            testeImage.at<float>(0, jj++) = imagem[0].at<uchar>(i, j);
-        }
     }
 
     //! [setup2]
@@ -448,7 +448,7 @@ void Test::trainSVM()
 void Test::loadSVM()
 {
     int ii = 0;
-    cv::Mat imagem = cv::imread("ImagemSaidaArucoP.jpg", 0);
+    cv::Mat imagem = cv::imread("teste.jpg", 0);
     int lin = imagem.rows, col = imagem.cols;
     int tamImg = lin * col;
 
