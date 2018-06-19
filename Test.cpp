@@ -97,6 +97,46 @@ void Test::organizeCSV()
     myfile.close();
 }
 
+void Test::loadOrganizeCSVAruco()
+{
+    int cont = 0, linhas, colunas = 2;
+    std::string arquivoIn, arquivoOut;
+
+    arquivoIn = "resultados/in.csv";
+    arquivoOut = "resultados/inSom.csv";
+
+    // Creating an object of CSVWriter
+    CSVReader reader(arquivoIn);
+
+    std::ofstream myfile;
+    myfile.open(arquivoOut);
+
+    // Get the data from CSV File
+    std::vector<std::vector<std::string>> dataList = reader.getData();
+
+    linhas = dataList.size();
+
+    myfile << linhas << " " << colunas << "\n";
+
+    for (std::vector<std::string> vec : dataList)
+    {
+        for (std::string data : vec)
+        {
+            myfile << data;
+            myfile << " ";
+            cont++;
+            if (cont == 2)
+            {
+                myfile << "\n";
+                cont = 0;
+            }
+        }
+    }
+    //std::cout << dataList.size();
+
+    myfile.close();
+}
+
 void Test::organizeCSVAruco()
 {
     int cont = 0, linhas, colunas = 2;
@@ -280,6 +320,75 @@ void Test::armInLine()
     delete data;
 }
 
+void Test::loadLoadNetwork()
+{
+    // usar o dataset
+    int tam = 10, iImagem, jImagem;
+    int tamImagem = tam * 80; // para uma resolucao maior
+    cv::Mat image(tamImagem, tamImagem, 0);
+    cv::Mat imagem(tam, tam, 0);
+    std::string posImagem;
+    SOM som(tam);
+    DataSet data;
+    Sample *s;
+    //Node* vencedor;
+    //std::vector <Node*> vencedores; // v = find  ...
+
+    std::string dataIn, imageOutVisual, imageOutTrain;
+
+    //int imagem[tamImagem][tamImagem];
+
+    som.loadNetworkAruco("visualization/treinamentoAruco/150.csv", tam);
+
+    for (int i = 0; i < tamImagem; i++)
+    {
+        for (int j = 0; j < tamImagem; j++)
+        {
+            //imagem[i][j] = 0;
+            image.at<uchar>(i, j) = 0;
+        }
+    }
+
+    for (int i = 0; i < tam; i++)
+    {
+        for (int j = 0; j < tam; j++)
+        {
+            imagem.at<uchar>(i, j) = 0;
+        }
+    }
+
+    dataIn = "resultados/inSom.csv";
+
+    imageOutVisual = "resultados/visual.jpg";
+
+    imageOutTrain = "resultados/teste.jpg";
+
+    data.loadDataFromFile(dataIn);
+
+    s = data.getRandomSample();
+    som.findWinner(s, iImagem, jImagem);
+
+    while (!(data.getRandomSample(s)))
+    {
+        som.findWinner(s, iImagem, jImagem);
+
+        imagem.at<uchar>(iImagem, jImagem) = 255;
+
+        for (int i = iImagem * 80; i < (iImagem * 80 + 80); i++)
+        {
+            for (int j = jImagem * 80; j < (jImagem * 80 + 80); j++)
+            {
+                image.at<uchar>(i, j) = 255;
+            }
+        }
+    }
+
+    //cv::imshow("Nodes", image);
+    cv::imwrite(imageOutVisual, image);
+    cv::imwrite(imageOutTrain, imagem);
+    //cv::waitKey();
+}
+
 void Test::loadNetwork()
 {
     // usar o dataset
@@ -448,7 +557,7 @@ void Test::trainSVM()
 void Test::loadSVM()
 {
     int ii = 0;
-    cv::Mat imagem = cv::imread("teste.jpg", 0);
+    cv::Mat imagem = cv::imread("resultados/teste.jpg", 0);
     int lin = imagem.rows, col = imagem.cols;
     int tamImg = lin * col;
 

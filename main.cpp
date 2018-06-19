@@ -27,11 +27,11 @@ int main(int argc, char** argv) {
 
     Test test;
     
-    /*Vision vision(argc, argv);
+    Vision vision(argc, argv);
     
     while(1){
         if(waitKey(1) == 110){
-            vision.saveMovement("Samples_Data/teste.csv");
+            vision.saveMovement("resultados/in.csv");
             //vision.record("../Samples/sample.avi");
 
             while(1){
@@ -48,19 +48,18 @@ int main(int argc, char** argv) {
             }
             vision.endSaving();
             cout << "Salvou!" << endl;
-            test.organizeCSVAruco();
-            test.loadNetwork();
+            test.loadOrganizeCSVAruco();
+            test.loadLoadNetwork();
+            test.loadSVM();
         }
-        cout << "Esperando o 'n'!" << endl;
-    }*/
-    
-    
-        
+        //cout << "Esperando o 'n'!" << endl;
+    }
+
     //test.organizeCSV();
     //test.organizeCSVAruco();
     //test.trainSVM();
     //test.leitorCSV();
-    test.loadSVM();
+    //test.loadSVM();
     //test.colorDataSet(); 
     //test.acelerometroDataSet();
     //test.loadNetwork(); 

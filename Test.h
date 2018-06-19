@@ -28,6 +28,8 @@ public:
     void loadSVM();
     void organizeCSVAruco();
     void arucoDataSet();
+    void loadOrganizeCSVAruco();
+    void loadLoadNetwork();
 private:
     
     
