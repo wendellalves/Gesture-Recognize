@@ -1,13 +1,7 @@
+//Para executar o codigo deve ser feito esses dois comandos passos
+//  make main
+//  ./main live camera.yml 0
 
-/* 
- * File:   main.cpp
- * Author: oriva
- *
- * Created on 20 de Agosto de 2016, 10:56
- */
-
-//make main
-//./main live camera.yml 0
 #include "Vision.h"
 #include <cstdlib>
 #include <iostream>
@@ -19,12 +13,7 @@ using namespace std;
 using namespace cv;
 using namespace aruco;
 
-/*
- * 
- */
 int main(int argc, char** argv) {
-    //cout << " Testando rede SOM!" << endl;
-
     Test test;
     
     Vision vision(argc, argv);
