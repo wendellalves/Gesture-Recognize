@@ -574,9 +574,25 @@ void Test::loadSVM()
     }
 
     int predicted = svm->predict(imagem1D);
-    std::cout << std::endl
-              << "Number -> " << predicted << std::endl
-              << std::endl;
+    if (predicted == 1)
+        std::cout << std::endl
+                  << "Frente" << std::endl
+                  << std::endl;
+    else if (predicted == -1)
+        std::cout << std::endl
+                  << "Tras" << std::endl
+                  << std::endl;
+    else if (predicted == 2)
+        std::cout << std::endl
+                  << "Direita" << std::endl
+                  << std::endl;
+    else
+        std::cout << std::endl
+                  << "Esquerda" << std::endl
+                  << std::endl;
+    //std::cout << std::endl
+    //         << "Number -> " << predicted << std::endl
+    //        << std::endl;
 }
 
 Test::~Test()
