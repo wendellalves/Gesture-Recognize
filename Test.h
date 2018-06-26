@@ -30,6 +30,7 @@ public:
     void arucoDataSet();
     void loadOrganizeCSVAruco();
     void loadLoadNetwork();
+    void Geral(int argc, char** argv);
 private:
     
     

@@ -16,37 +16,55 @@ using namespace aruco;
 int main(int argc, char** argv) {
     Test test;
     
-    Vision vision(argc, argv);
+    // Vision vision(argc, argv);
     
-    while(1){
-        if(waitKey(1) == 110){
-            vision.saveMovement("resultados/in.csv");
-            //vision.record("../Samples/sample.avi");
+    // //test.trainSVM();
+    
+    // std::string dataIn, aux, aux2;
+    // aux2 = ".csv";
+    // int cont = 6;
 
-            while(1){
-                vision.calculateTagCenter();
-                if (vision.isTargetOn()) {
-                    vision.savePoint(vision.getCenter());
-                }
+    // while(1){
+    //     if(waitKey(1) == 110){
 
-                vision.show();
-                //vision.saveVideo();
-                if(waitKey(1) == 27)
-                    break;
-                cout << "salvando o centro" << endl;
-            }
-            vision.endSaving();
-            cout << "Salvou!" << endl;
-            test.loadOrganizeCSVAruco();
-            test.loadLoadNetwork();
-            test.loadSVM();
-        }
-        //cout << "Esperando o 'n'!" << endl;
-    }
+    //         aux = std::to_string(cont);
+    //         dataIn = "resultados/teste";
+    //         dataIn += aux;
+    //         dataIn += aux2;
+
+    //         // dataIn = "resultados/teste";
+    //         // dataIn += aux2;
+
+    //         vision.saveMovement(dataIn);
+    //         //vision.record("../Samples/sample.avi");
+
+    //         while(1){
+    //             vision.calculateTagCenter();
+    //             if (vision.isTargetOn()) {
+    //                 vision.savePoint(vision.getCenter());
+    //             }
+
+    //             vision.show();
+    //             //vision.saveVideo();
+    //             if(waitKey(1) == 27){
+    //                 cont++;
+    //                 break;
+    //             }
+    //             //cout << "salvando o centro" << endl;
+    //         }
+    //         vision.endSaving();
+    //         cout << "Salvou!" << endl;
+    //         test.loadOrganizeCSVAruco();
+    //         test.loadLoadNetwork();
+    //         test.loadSVM();
+    //     }
+    //     //cout << "Esperando o 'n'!" << endl;
+    // }
 
     //test.organizeCSV();
+    //test.loadOrganizeCSVAruco();
     //test.organizeCSVAruco();
-    //test.trainSVM();
+    test.trainSVM();
     //test.leitorCSV();
     //test.loadSVM();
     //test.colorDataSet(); 
@@ -54,5 +72,6 @@ int main(int argc, char** argv) {
     //test.loadNetwork(); 
     //test.armInLine();
     //test.arucoDataSet();
+    //test.Geral(argc, argv);
     return 0;
 }
