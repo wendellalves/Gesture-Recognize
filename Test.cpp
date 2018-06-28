@@ -550,10 +550,11 @@ void Test::trainSVM()
     //! [init]
     cv::Ptr<SVM> svm = SVM::create();
     svm->setType(SVM::C_SVC);
-    svm->setKernel(SVM::RBF);
-    svm->setGamma(2);
-    svm->setC(8);
-    svm->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, 10000, 1e-6));
+    svm->setKernel(SVM::POLY);
+    svm->setGamma(0.5);
+    svm->setDegree(3);
+    //svm->setC(8);
+    svm->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, 1000000, 1e-6));
     //! [init]
     //! [train]
     svm->train(matImage, ROW_SAMPLE, labelsMat);
@@ -561,6 +562,52 @@ void Test::trainSVM()
     // store its knowledge in a yaml file
     svm->save("knowledge.yml");
     //! [train]
+}
+
+void Test::loadSVM2()
+{
+    int ii = 0;
+    cv::Mat imagem[2];
+    imagem[0] = cv::imread("direitaTrain1.jpg", 0);
+    imagem[1] = cv::imread("esquerdaTrain1.jpg", 0);
+    int lin = 10, col = 10;
+    int tamImg = lin * col;
+
+    cv::Mat imagem1D(1, tamImg, CV_32FC1);
+    cv::Ptr<SVM> svm;
+    svm = cv::Algorithm::load<SVM>("knowledge.yml");
+
+    // for (int i = 0; i < lin; i++)
+    // {
+    //     for (int j = 0; j < col; j++)
+    //     {
+    //         imagem1D.at<float>(0, ii++) = imagem[0].at<uchar>(i, j);
+    //     }
+    // }
+    // int predicted = svm->predict(imagem1D);
+    // if (predicted == 1)
+    //     std::cout << std::endl
+    //               << "Direita" << std::endl
+    //               << std::endl;
+    // else if (predicted == -1)
+    //     std::cout << std::endl
+    //               << "Esquerda" << std::endl
+    //               << std::endl;
+
+    for (int i = 0; i < lin; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            imagem1D.at<float>(0, ii++) = imagem[0].at<uchar>(i, j);
+        }
+    }
+    int predicted = svm->predict(imagem1D);
+    std::cout << std::endl
+              << predicted << std::endl
+              << std::endl;
+    //std::cout << std::endl
+    //         << "Number -> " << predicted << std::endl
+    //        << std::endl;
 }
 
 void Test::loadSVM()
@@ -602,6 +649,7 @@ void Test::loadSVM()
     //std::cout << std::endl
     //         << "Number -> " << predicted << std::endl
     //        << std::endl;
+    cv::imshow("saida", imagem);
 }
 
 void Test::Geral(int argc, char **argv)
@@ -613,7 +661,7 @@ void Test::Geral(int argc, char **argv)
     //test.trainSVM();
 
     std::string dataIn, aux, aux2;
-    aux2 = ".csv";
+    //aux2 = ".csv";
     int cont = 1;
 
     while (1)
@@ -622,9 +670,9 @@ void Test::Geral(int argc, char **argv)
         {
 
             //aux = std::to_string(cont);
-            dataIn = "resultados/teste";
+            dataIn = "resultados/teste.csv";
             //dataIn += aux;
-            dataIn += aux2;
+            //dataIn += aux2;
 
             // dataIn = "resultados/teste";
             // dataIn += aux2;
@@ -773,13 +821,16 @@ void Test::Geral(int argc, char **argv)
             }
 
             int predicted = svm->predict(imagem1D);
+
+            std::cout << predicted << std::endl;
+
             if (predicted == 1)
                 std::cout << std::endl
-                          << "Direita" << std::endl
+                          << "Esquerda" << std::endl
                           << std::endl;
             else if (predicted == -1)
                 std::cout << std::endl
-                          << "Esquerda" << std::endl
+                          << "Direita" << std::endl
                           << std::endl;
             else if (predicted == 2)
                 std::cout << std::endl

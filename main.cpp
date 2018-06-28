@@ -22,14 +22,14 @@ int main(int argc, char** argv) {
     
     // std::string dataIn, aux, aux2;
     // aux2 = ".csv";
-    // int cont = 6;
+    // //int cont = 6;
 
     // while(1){
     //     if(waitKey(1) == 110){
 
-    //         aux = std::to_string(cont);
+    //         //aux = std::to_string(cont);
     //         dataIn = "resultados/teste";
-    //         dataIn += aux;
+    //         //dataIn += aux;
     //         dataIn += aux2;
 
     //         // dataIn = "resultados/teste";
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     //             vision.show();
     //             //vision.saveVideo();
     //             if(waitKey(1) == 27){
-    //                 cont++;
+    //                 //cont++;
     //                 break;
     //             }
     //             //cout << "salvando o centro" << endl;
@@ -64,14 +64,15 @@ int main(int argc, char** argv) {
     //test.organizeCSV();
     //test.loadOrganizeCSVAruco();
     //test.organizeCSVAruco();
-    test.trainSVM();
+    //test.trainSVM();
     //test.leitorCSV();
     //test.loadSVM();
     //test.colorDataSet(); 
     //test.acelerometroDataSet();
-    //test.loadNetwork(); 
+    //test.loadNetwork();
+    //test.loadSVM2();
     //test.armInLine();
     //test.arucoDataSet();
-    //test.Geral(argc, argv);
+    test.Geral(argc, argv);
     return 0;
 }

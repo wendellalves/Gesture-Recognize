@@ -25,6 +25,7 @@ public:
     void armInLine(); 
     void loadNetwork();
     void trainSVM();
+    void loadSVM2();
     void loadSVM();
     void organizeCSVAruco();
     void arucoDataSet();
