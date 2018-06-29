@@ -863,7 +863,7 @@ void Test::dados(int argc, char **argv)
         {
 
             aux = std::to_string(cont);
-            dataIn = "data/dadosAruco/Frente/frente";
+            dataIn = "data/dadosAruco/Tras/tras";
             dataIn += aux;
             dataIn += aux2;
 
