@@ -551,10 +551,11 @@ void Test::trainSVM()
     cv::Ptr<SVM> svm = SVM::create();
     svm->setType(SVM::C_SVC);
     svm->setKernel(SVM::POLY);
-    svm->setGamma(1);
-    svm->setDegree(4);
-    //svm->setC(8);
-    svm->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, 10000000, 1e-6));
+    svm->setGamma(8);
+    svm->setDegree(3);
+    svm->setC(0.05);
+    svm->setCoef0(0.6);
+    svm->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, 100000, 1e-6));
     //! [init]
     //! [train]
     svm->train(matImage, ROW_SAMPLE, labelsMat);
@@ -567,31 +568,56 @@ void Test::trainSVM()
 void Test::loadSVM2()
 {
     int ii = 0;
-    cv::Mat imagem[3];
-    imagem[0] = cv::imread("esquerdaTrain3.jpg", 0);
-    imagem[1] = cv::imread("direitaTrain2.jpg", 0);
-    imagem[2] = cv::imread("frenteTrain4.jpg", 0);
+    cv::Mat imagem;
+    imagem = cv::imread("testar/direitaTrain10.jpg", 0);
+    //imagem[1] = cv::imread("direitaTrain2.jpg", 0);
+    //imagem[2] = cv::imread("frenteTrain4.jpg", 0);
     int lin = 10, col = 10;
     int tamImg = lin * col;
+
+    std::string dataIn, aux, aux2;
+    aux2 = ".jpg";
 
     cv::Mat imagem1D(1, tamImg, CV_32FC1);
     cv::Ptr<SVM> svm;
     svm = cv::Algorithm::load<SVM>("knowledge.yml");
 
+    //dataIn = "testar/trasTrain";
+    //dataIn += aux2;
+
+    //imagem = cv::imread(dataIn, 0);
+
+    std::cout << dataIn << " - ";
+    std::cout << "Esperado: -2 -     Recebido: ";
+
     for (int i = 0; i < lin; i++)
     {
         for (int j = 0; j < col; j++)
         {
-            imagem1D.at<float>(0, ii++) = imagem[2].at<uchar>(i, j);
+            imagem1D.at<float>(0, ii++) = imagem.at<uchar>(i, j);
         }
     }
     int predicted = svm->predict(imagem1D);
-    std::cout << std::endl
-              << predicted << std::endl
-              << std::endl;
-    //std::cout << std::endl
-    //         << "Number -> " << predicted << std::endl
-    //        << std::endl;
+    std::cout //<< std::endl
+        << predicted << std::endl
+        << std::endl;
+
+    /*if (predicted == 1)
+            std::cout << std::endl
+                      << "Direita" << std::endl
+                      << std::endl;
+        else if (predicted == -1)
+            std::cout << std::endl
+                      << "Esquerda" << std::endl
+                      << std::endl;
+        else if (predicted == 2)
+            std::cout << std::endl
+                      << "Frente" << std::endl
+                      << std::endl;
+        else
+            std::cout << std::endl
+                      << "Tras" << std::endl
+                      << std::endl;*/
 }
 
 void Test::loadSVM()
