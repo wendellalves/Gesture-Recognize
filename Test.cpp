@@ -848,6 +848,50 @@ void Test::Geral(int argc, char **argv)
     }
 }
 
+void Test::dados(int argc, char **argv)
+{
+
+    Vision vision(argc, argv);
+
+    std::string dataIn, aux, aux2;
+    aux2 = ".csv";
+    int cont = 1;
+
+    while (1)
+    {
+        if (cv::waitKey(1) == 110)
+        {
+
+            aux = std::to_string(cont);
+            dataIn = "data/dadosAruco/Frente/frente";
+            dataIn += aux;
+            dataIn += aux2;
+
+            vision.saveMovement(dataIn);
+
+            while (1)
+            {
+                vision.calculateTagCenter();
+                if (vision.isTargetOn())
+                {
+                    vision.savePoint(vision.getCenter());
+                }
+
+                vision.show();
+                //vision.saveVideo();
+                if (cv::waitKey(1) == 27)
+                {
+                    cont++;
+                    std::cout << cont << std::endl;
+                    break;
+                }
+            }
+            vision.endSaving();
+            std::cout << "Salvou!" << std::endl;
+        }
+    }
+}
+
 Test::~Test()
 {
 }

@@ -32,6 +32,7 @@ public:
     void loadOrganizeCSVAruco();
     void loadLoadNetwork();
     void Geral(int argc, char** argv);
+    void dados(int argc, char** argv);
 private:
     
     
