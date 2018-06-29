@@ -149,11 +149,11 @@ void Test::organizeCSVAruco()
     for (int i = 1; i < 21; i++)
     {
         aux = std::to_string(i);
-        arquivoIn = "data/dadosAruco/Esquerda/esquerda";
+        arquivoIn = "data/dadosAruco/Tras/tras";
         arquivoIn += aux;
         arquivoIn += aux2;
 
-        arquivoOut = "data/dadosAruco/DEFTNew/esquerda";
+        arquivoOut = "data/dadosAruco/DEFTNew/tras";
         arquivoOut += aux;
         arquivoOut += aux2;
 
@@ -227,7 +227,7 @@ void Test::acelerometroDataSet()
 
 void Test::arucoDataSet()
 {
-    std::string fileData = "data/dadosAruco/DEOrganizado.csv";
+    std::string fileData = "data/dadosAruco/DEFTOrganizado.csv";
 
     SOM som(10);
     DataSet *data = new DataSet(fileData);
@@ -238,23 +238,23 @@ void Test::arucoDataSet()
     float maxColorInitialValue = 0.02;
     som.initializeNodes(2, true, maxColorInitialValue);
 
-    int iterations = 15000;
+    int iterations = 2500000;
 
     // Execute many iterations
     int i = 0;
-    som.printNodes();
+    //som.printNodes();
     while (i < (iterations))
     {
         som.executeOneIt();
         i++;
-        if (i % 100 == 0)
+        if (i % 10000 == 0)
         {
             som.printNodes();
             som.saveNodes("visualization/treinamentoAruco/", "i,j,x,y", false);
         }
     }
 
-    som.printNodes(true);
+    //som.printNodes(true);
     som.saveNodes("visualization/treinamentoAruco/", "i,j,x,y", false);
 
     std::cout << "Iteractions executed: " << iterations << std::endl;
@@ -343,7 +343,7 @@ void Test::loadLoadNetwork()
 
     //int imagem[tamImagem][tamImagem];
 
-    som.loadNetworkAruco("visualization/treinamentoAruco/15000.csv", tam);
+    som.loadNetworkAruco("visualization/treinamentoAruco/1500000.csv", tam);
 
     for (int i = 0; i < tamImagem; i++)
     {
@@ -414,7 +414,7 @@ void Test::loadNetwork()
 
     //int imagem[tamImagem][tamImagem];
 
-    som.loadNetworkAruco("visualization/treinamentoAruco/15000.csv", tam);
+    som.loadNetworkAruco("visualization/treinamentoAruco/2500000.csv", tam);
 
     for (int i = 1; i < 21; i++)
     {
@@ -436,15 +436,15 @@ void Test::loadNetwork()
         }
 
         aux = std::to_string(i);
-        dataIn = "data/dadosAruco/DEFTNew/direita";
+        dataIn = "data/dadosAruco/DEFTNew/frente";
         dataIn += aux;
         dataIn += aux2;
 
-        imageOutVisual = "resultadosSom/visualizar/direitaVisual";
+        imageOutVisual = "resultadosSom/visualizar/frenteVisual";
         imageOutVisual += aux;
         imageOutVisual += aux3;
 
-        imageOutTrain = "resultadosSom/treinar/direitaTrain";
+        imageOutTrain = "resultadosSom/treinar/frenteTrain";
         imageOutTrain += aux;
         imageOutTrain += aux3;
 
@@ -478,7 +478,7 @@ void Test::loadNetwork()
 void Test::trainSVM()
 {
     int lin = 10, col = 10;
-    int qntImg = 40, tamImg = lin * col;
+    int qntImg = 80, tamImg = lin * col;
     int labels[qntImg];
     std::vector<cv::Mat> imagem(qntImg);
 
@@ -507,24 +507,24 @@ void Test::trainSVM()
             labels[i - 1] = -1;
             std::cout << dataIn << std::endl;
         }
-        /*else if (i < 46)
+        else if (i < 61)
         {
-            aux = std::to_string(i - 30);
+            aux = std::to_string(i - 40);
             dataIn = "resultadosSom/treinar/frenteTrain";
             dataIn += aux;
             dataIn += aux2;
             imagem[i - 1] = cv::imread(dataIn, 0);
-            labels[i - 1] = 1;
+            labels[i - 1] = 2;
         }
-        else if (i < 61)
+        else if (i < 81)
         {
-            aux = std::to_string(i - 45);
+            aux = std::to_string(i - 60);
             dataIn = "resultadosSom/treinar/trasTrain";
             dataIn += aux;
             dataIn += aux2;
             imagem[i - 1] = cv::imread(dataIn, 0);
-            labels[i - 1] = -1;
-        }*/
+            labels[i - 1] = -2;
+        }
     }
 
     //int ii = 0;
@@ -551,10 +551,10 @@ void Test::trainSVM()
     cv::Ptr<SVM> svm = SVM::create();
     svm->setType(SVM::C_SVC);
     svm->setKernel(SVM::POLY);
-    svm->setGamma(0.5);
-    svm->setDegree(3);
+    svm->setGamma(1);
+    svm->setDegree(4);
     //svm->setC(8);
-    svm->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, 1000000, 1e-6));
+    svm->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, 10000000, 1e-6));
     //! [init]
     //! [train]
     svm->train(matImage, ROW_SAMPLE, labelsMat);
@@ -567,9 +567,10 @@ void Test::trainSVM()
 void Test::loadSVM2()
 {
     int ii = 0;
-    cv::Mat imagem[2];
-    imagem[0] = cv::imread("direitaTrain1.jpg", 0);
-    imagem[1] = cv::imread("esquerdaTrain1.jpg", 0);
+    cv::Mat imagem[3];
+    imagem[0] = cv::imread("esquerdaTrain3.jpg", 0);
+    imagem[1] = cv::imread("direitaTrain2.jpg", 0);
+    imagem[2] = cv::imread("frenteTrain4.jpg", 0);
     int lin = 10, col = 10;
     int tamImg = lin * col;
 
@@ -577,28 +578,11 @@ void Test::loadSVM2()
     cv::Ptr<SVM> svm;
     svm = cv::Algorithm::load<SVM>("knowledge.yml");
 
-    // for (int i = 0; i < lin; i++)
-    // {
-    //     for (int j = 0; j < col; j++)
-    //     {
-    //         imagem1D.at<float>(0, ii++) = imagem[0].at<uchar>(i, j);
-    //     }
-    // }
-    // int predicted = svm->predict(imagem1D);
-    // if (predicted == 1)
-    //     std::cout << std::endl
-    //               << "Direita" << std::endl
-    //               << std::endl;
-    // else if (predicted == -1)
-    //     std::cout << std::endl
-    //               << "Esquerda" << std::endl
-    //               << std::endl;
-
     for (int i = 0; i < lin; i++)
     {
         for (int j = 0; j < col; j++)
         {
-            imagem1D.at<float>(0, ii++) = imagem[0].at<uchar>(i, j);
+            imagem1D.at<float>(0, ii++) = imagem[2].at<uchar>(i, j);
         }
     }
     int predicted = svm->predict(imagem1D);
@@ -630,6 +614,11 @@ void Test::loadSVM()
     }
 
     int predicted = svm->predict(imagem1D);
+
+    std::cout << std::endl
+              << "Number -> " << predicted << std::endl
+              << std::endl;
+
     if (predicted == 1)
         std::cout << std::endl
                   << "Direita" << std::endl
@@ -863,7 +852,7 @@ void Test::dados(int argc, char **argv)
         {
 
             aux = std::to_string(cont);
-            dataIn = "data/dadosAruco/Tras/tras";
+            dataIn = "data/dadosAruco/Frente/frente";
             dataIn += aux;
             dataIn += aux2;
 
