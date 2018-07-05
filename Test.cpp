@@ -550,15 +550,16 @@ void Test::trainSVM()
     //! [init]
     cv::Ptr<SVM> svm = SVM::create();
     svm->setType(SVM::C_SVC);
-    svm->setKernel(SVM::CHI2);
-    //svm->setDegree(3);
-    svm->setC(80);
-    svm->setGamma(2.7);
+    svm->setKernel(SVM::POLY);
+    svm->setDegree(0.6);
+    svm->setC(1);
+    svm->setGamma(0.50625);
     //svm->setCoef0(0.6);
     svm->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, 100000, 1e-6));
     //! [init]
     //! [train]
-    svm->train(matImage, ROW_SAMPLE, labelsMat);
+    //svm->train(matImage, ROW_SAMPLE, labelsMat);
+    svm->trainAuto(matImage, ROW_SAMPLE, labelsMat);
 
     // store its knowledge in a yaml file
     svm->save("knowledge.yml");
@@ -569,7 +570,7 @@ void Test::loadSVM2()
 {
     int ii = 0;
     cv::Mat imagem;
-    imagem = cv::imread("testar/direitaTrain17.jpg", 0);
+    imagem = cv::imread("testar/direitaTrain11.jpg", 0);
     //imagem[1] = cv::imread("direitaTrain2.jpg", 0);
     //imagem[2] = cv::imread("frenteTrain4.jpg", 0);
     int lin = 10, col = 10;
@@ -580,7 +581,7 @@ void Test::loadSVM2()
 
     cv::Mat imagem1D(1, tamImg, CV_32FC1);
     cv::Ptr<SVM> svm;
-    svm = cv::Algorithm::load<SVM>("knowledge.yml");
+    svm = cv::ml::StatModel::load<cv::ml::SVM>("knowledge.yml");
 
     //dataIn = "testar/trasTrain";
     //dataIn += aux2;
@@ -601,6 +602,15 @@ void Test::loadSVM2()
     std::cout //<< std::endl
         << predicted << std::endl
         << std::endl;
+
+    std::cout << "C = " << svm->getC() << std::endl;
+    std::cout << "Gamma = " << svm->getGamma() << std::endl;
+    std::cout << "Degree = " << svm->getDegree() << std::endl;
+    std::cout << "Nu = " << svm->getNu() << std::endl;
+    std::cout << "Coef0 = " << svm->getCoef0() << std::endl;
+
+
+
 
     /*if (predicted == 1)
             std::cout << std::endl
