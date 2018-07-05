@@ -550,11 +550,11 @@ void Test::trainSVM()
     //! [init]
     cv::Ptr<SVM> svm = SVM::create();
     svm->setType(SVM::C_SVC);
-    svm->setKernel(SVM::POLY);
-    svm->setGamma(8);
-    svm->setDegree(3);
-    svm->setC(0.05);
-    svm->setCoef0(0.6);
+    svm->setKernel(SVM::CHI2);
+    //svm->setDegree(3);
+    svm->setC(80);
+    svm->setGamma(2.7);
+    //svm->setCoef0(0.6);
     svm->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, 100000, 1e-6));
     //! [init]
     //! [train]
@@ -569,7 +569,7 @@ void Test::loadSVM2()
 {
     int ii = 0;
     cv::Mat imagem;
-    imagem = cv::imread("testar/direitaTrain10.jpg", 0);
+    imagem = cv::imread("testar/direitaTrain17.jpg", 0);
     //imagem[1] = cv::imread("direitaTrain2.jpg", 0);
     //imagem[2] = cv::imread("frenteTrain4.jpg", 0);
     int lin = 10, col = 10;
