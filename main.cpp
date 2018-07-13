@@ -2,6 +2,12 @@
 //  make main
 //  ./main live camera.yml 0
 
+//C = 0.1
+//Gamma = 1e-05
+//Degree = 0.49
+//Nu = 0
+//Coef0 = 0.1
+
 #include "Vision.h"
 #include <cstdlib>
 #include <iostream>
