@@ -888,7 +888,7 @@ void Test::dados(int argc, char **argv)
         {
 
             aux = std::to_string(cont);
-            dataIn = "data/dadosAruco/Frente/frente";
+            dataIn = "data/CtrlRobo/Frente/frente";
             dataIn += aux;
             dataIn += aux2;
 

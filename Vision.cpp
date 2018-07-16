@@ -25,6 +25,11 @@ void Vision::cvTackBarEvents(int pos, void*){
         for (unsigned int i = 0; i < TheMarkers.size(); i++)
             aruco::CvDrawingUtils::draw3dCube(TheInputImageCopy, TheMarkers[i], TheCameraParameters);
 
+    int radius = 20;
+    cv::Point pt;
+    pt.x = TheInputImageCopy.size().width / 2;
+    pt.y = TheInputImageCopy.size().height / 2;
+    cv::circle(TheInputImageCopy, pt, radius, cv::Scalar(255, 0, 0));
     cv::imshow("in",  TheInputImageCopy );
 }
 
