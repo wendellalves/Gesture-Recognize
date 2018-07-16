@@ -31,10 +31,10 @@ int main(int argc, char** argv) {
     //test.colorDataSet(); 
     //test.acelerometroDataSet();
     //test.loadNetwork();
-    test.loadSVM2();
+    //test.loadSVM2();
     //test.armInLine();
     //test.arucoDataSet();
-    //test.Geral(argc, argv);
+    test.Geral(argc, argv);
     //test.dados(argc, argv);
     return 0;
 }

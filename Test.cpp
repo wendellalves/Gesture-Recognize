@@ -572,7 +572,7 @@ void Test::loadSVM2()
 {
     int ii = 0;
     cv::Mat imagem;
-    imagem = cv::imread("testar/frenteTrain17.jpg", 0);
+    imagem = cv::imread("testar/frenteTrain2.jpg", 0);
     //imagem[1] = cv::imread("direitaTrain2.jpg", 0);
     //imagem[2] = cv::imread("frenteTrain4.jpg", 0);
     int lin = 10, col = 10;
@@ -605,16 +605,14 @@ void Test::loadSVM2()
         << predicted << std::endl
         << std::endl;
 
-    std::cout << "C = " << svm->getC() << std::endl;
-    std::cout << "Gamma = " << svm->getGamma() << std::endl;
-    std::cout << "Degree = " << svm->getDegree() << std::endl;
-    std::cout << "Nu = " << svm->getNu() << std::endl;
-    std::cout << "Coef0 = " << svm->getCoef0() << std::endl;
+    // std::cout << "C = " << svm->getC() << std::endl;
+    // std::cout << "Gamma = " << svm->getGamma() << std::endl;
+    // std::cout << "Degree = " << svm->getDegree() << std::endl;
+    // std::cout << "Nu = " << svm->getNu() << std::endl;
+    // std::cout << "Coef0 = " << svm->getCoef0() << std::endl;
 
 
-
-
-    /*if (predicted == 1)
+    if (predicted == 1)
             std::cout << std::endl
                       << "Direita" << std::endl
                       << std::endl;
@@ -629,7 +627,7 @@ void Test::loadSVM2()
         else
             std::cout << std::endl
                       << "Tras" << std::endl
-                      << std::endl;*/
+                      << std::endl;
 }
 
 void Test::loadSVM()
@@ -693,7 +691,7 @@ void Test::Geral(int argc, char **argv)
 
     while (1)
     {
-        if (cv::waitKey(1) == 110)
+        if (cv::waitKey(1) == 110) // Press "n"
         {
 
             //aux = std::to_string(cont);
@@ -717,7 +715,7 @@ void Test::Geral(int argc, char **argv)
 
                 vision.show();
                 //vision.saveVideo();
-                if (cv::waitKey(1) == 27)
+                if (cv::waitKey(1) == 27)//Press "Esc"
                 {
                     cont++;
                     break;
@@ -780,7 +778,7 @@ void Test::Geral(int argc, char **argv)
 
             //int imagem[tamImagem][tamImagem];
 
-            som.loadNetworkAruco("visualization/treinamentoAruco/15000.csv", tam);
+            som.loadNetworkAruco("visualization/treinamentoAruco/2500000.csv", tam);
 
             for (int i = 0; i < tamImagem; i++)
             {
@@ -853,11 +851,11 @@ void Test::Geral(int argc, char **argv)
 
             if (predicted == 1)
                 std::cout << std::endl
-                          << "Esquerda" << std::endl
+                          << "Direita" << std::endl
                           << std::endl;
             else if (predicted == -1)
                 std::cout << std::endl
-                          << "Direita" << std::endl
+                          << "Esquerda" << std::endl
                           << std::endl;
             else if (predicted == 2)
                 std::cout << std::endl
