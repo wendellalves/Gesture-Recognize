@@ -875,7 +875,6 @@ void Test::Geral(int argc, char **argv)
 
 void Test::dados(int argc, char **argv)
 {
-
     Vision vision(argc, argv);
 
     std::string dataIn, aux, aux2;
@@ -883,10 +882,9 @@ void Test::dados(int argc, char **argv)
     int cont = 1;
 
     while (1)
-    {
+    {       
         if (cv::waitKey(1) == 110)
         {
-
             aux = std::to_string(cont);
             dataIn = "data/CtrlRobo/Frente/frente";
             dataIn += aux;
@@ -907,7 +905,13 @@ void Test::dados(int argc, char **argv)
                 if (cv::waitKey(1) == 27)
                 {
                     cont++;
-                    std::cout << cont << std::endl;
+                    std::cout << "Salvou o " << dataIn << std::endl;
+                    //std::cout << cont << std::endl;
+                    break;
+                }else if (cv::waitKey(1) == 32)
+                {
+                    std::cout << "A proxima vai sobrescrever o " << dataIn << std::endl;
+                    //std::cout << cont << std::endl;
                     break;
                 }
             }
