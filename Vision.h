@@ -61,7 +61,22 @@ class Vision{
         inline bool isTargetOn(){return target_on;}
 
         void drawError(cv::Point pos, cv::Point error);
-        inline void show(){flip(TheInputImageCopy, TheInputImageCopy, 1);imshow("in", TheInputImageCopy);}
+        inline void show(){
+            flip(TheInputImageCopy, TheInputImageCopy, 1);
+            int radius = 40;
+            cv::Point ptCenter, ptHorI, ptHorF, ptVerI, ptVerF, ptDiagI, ptDiagF;
+            ptHorI.x = 0;ptHorI.y = TheInputImageCopy.size().height / 2;ptHorF.x = TheInputImageCopy.size().width;ptHorF.y = TheInputImageCopy.size().height / 2;
+            ptVerI.x = TheInputImageCopy.size().width / 2;ptVerI.y = 0;ptVerF.x = TheInputImageCopy.size().width / 2;ptVerF.y = TheInputImageCopy.size().height;
+            ptDiagI.x = TheInputImageCopy.size().width / 2;ptDiagI.y = TheInputImageCopy.size().height / 2;ptDiagF.x = TheInputImageCopy.size().width;ptDiagF.y = 0;
+            ptCenter.x = TheInputImageCopy.size().width / 2;ptCenter.y = TheInputImageCopy.size().height / 2;
+            cv::circle(TheInputImageCopy, ptCenter, radius, cv::Scalar(0, 0, 255), 2);
+            cv::line(TheInputImageCopy, ptHorI, ptHorF, cv::Scalar(0, 255, 0), 2);
+            cv::line(TheInputImageCopy, ptVerI, ptVerF, cv::Scalar(255, 0, 0), 2);
+            cv::line(TheInputImageCopy, ptDiagI, ptDiagF, cv::Scalar(255, 255, 255), 2);
+            cv::rectangle(TheInputImageCopy, ptCenter/2, ptCenter*1.5, cv::Scalar(255, 0, 255), 2);
+
+            imshow("in", TheInputImageCopy);
+        }
 
         void record(std::string filename);
 
