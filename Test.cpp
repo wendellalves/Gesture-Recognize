@@ -959,7 +959,14 @@ void Test::dados(int argc, char **argv)
                 if (cv::waitKey(1) == 27)
                 {
                     cont++;
-                    std::cout << cont << std::endl;
+                    std::cout << "Salvou o " << dataIn << std::endl;
+                    //std::cout << cont << std::endl;
+                    break;
+                }
+                else if (cv::waitKey(1) == 32)
+                {
+                    std::cout << "A proxima vai sobrescrever o " << dataIn << std::endl;
+                    //std::cout << cont << std::endl;
                     break;
                 }
             }
