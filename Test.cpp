@@ -103,8 +103,10 @@ void Test::loadOrganizeCSVAruco()
     int cont = 0, linhas, colunas = 2;
     std::string arquivoIn, arquivoOut;
 
-    arquivoIn = "resultados/teste.csv";
-    arquivoOut = "resultados/testeIn.csv";
+    arquivoIn = "data/CtrlRobo/CtrlRobo.csv";
+    arquivoOut = "data/CtrlRobo/CtrlRoboOrganizado.csv";
+    //arquivoIn = "resultados/teste.csv";
+    //arquivoOut = "resultados/testeIn.csv";
     //arquivoIn = "data/dadosAruco/DE.csv";
     //arquivoOut = "data/dadosAruco/DEOrganizado.csv";
 
@@ -146,14 +148,14 @@ void Test::organizeCSVAruco()
     std::string arquivoIn, arquivoOut, aux, aux2;
     aux2 = ".csv";
 
-    for (int i = 1; i < 21; i++)
+    for (int i = 1; i < 26; i++)
     {
         aux = std::to_string(i);
-        arquivoIn = "data/dadosAruco/Tras/tras";
+        arquivoIn = "data/CtrlRobo/Loop/loop";
         arquivoIn += aux;
         arquivoIn += aux2;
 
-        arquivoOut = "data/dadosAruco/DEFTNew/tras";
+        arquivoOut = "data/CtrlRobo/DEFTNew/loop";
         arquivoOut += aux;
         arquivoOut += aux2;
 
@@ -227,7 +229,7 @@ void Test::acelerometroDataSet()
 
 void Test::arucoDataSet()
 {
-    std::string fileData = "data/dadosAruco/DEFTOrganizado.csv";
+    std::string fileData = "data/CtrlRobo/CtrlRoboOrganizado.csv";
 
     SOM som(10);
     DataSet *data = new DataSet(fileData);
@@ -247,9 +249,9 @@ void Test::arucoDataSet()
     {
         som.executeOneIt();
         i++;
-        if (i % 10000 == 0)
+        if (i % 100000 == 0)
         {
-            som.printNodes();
+            //som.printNodes();
             som.saveNodes("visualization/treinamentoAruco/", "i,j,x,y", false);
         }
     }
@@ -416,7 +418,7 @@ void Test::loadNetwork()
 
     som.loadNetworkAruco("visualization/treinamentoAruco/2500000.csv", tam);
 
-    for (int i = 1; i < 21; i++)
+    for (int i = 1; i < 26; i++)
     {
         for (int i = 0; i < tamImagem; i++)
         {
@@ -436,15 +438,15 @@ void Test::loadNetwork()
         }
 
         aux = std::to_string(i);
-        dataIn = "data/dadosAruco/DEFTNew/frente";
+        dataIn = "data/CtrlRobo/DEFTNew/loop";
         dataIn += aux;
         dataIn += aux2;
 
-        imageOutVisual = "resultadosSom/visualizar/frenteVisual";
+        imageOutVisual = "resultadosSom/visualizar/loopVisual";
         imageOutVisual += aux;
         imageOutVisual += aux3;
 
-        imageOutTrain = "resultadosSom/treinar/frenteTrain";
+        imageOutTrain = "resultadosSom/treinar/loopTrain";
         imageOutTrain += aux;
         imageOutTrain += aux3;
 
@@ -478,7 +480,7 @@ void Test::loadNetwork()
 void Test::trainSVM()
 {
     int lin = 10, col = 10;
-    int qntImg = 80, tamImg = lin * col;
+    int qntImg = 175, tamImg = lin * col;
     int labels[qntImg];
     std::vector<cv::Mat> imagem(qntImg);
 
@@ -487,7 +489,7 @@ void Test::trainSVM()
 
     for (int i = 1; i < qntImg + 1; i++)
     {
-        if (i < 21)
+        if (i < 26)
         {
             aux = std::to_string(i);
             dataIn = "resultadosSom/treinar/direitaTrain";
@@ -497,9 +499,9 @@ void Test::trainSVM()
             labels[i - 1] = 1;
             std::cout << dataIn << std::endl;
         }
-        else if (i < 41)
+        else if (i < 51)
         {
-            aux = std::to_string(i - 20);
+            aux = std::to_string(i - 25);
             dataIn = "resultadosSom/treinar/esquerdaTrain";
             dataIn += aux;
             dataIn += aux2;
@@ -507,23 +509,50 @@ void Test::trainSVM()
             labels[i - 1] = -1;
             std::cout << dataIn << std::endl;
         }
-        else if (i < 61)
+        else if (i < 76)
         {
-            aux = std::to_string(i - 40);
+            aux = std::to_string(i - 50);
             dataIn = "resultadosSom/treinar/frenteTrain";
             dataIn += aux;
             dataIn += aux2;
             imagem[i - 1] = cv::imread(dataIn, 0);
             labels[i - 1] = 2;
         }
-        else if (i < 81)
+        else if (i < 101)
         {
-            aux = std::to_string(i - 60);
+            aux = std::to_string(i - 75);
             dataIn = "resultadosSom/treinar/trasTrain";
             dataIn += aux;
             dataIn += aux2;
             imagem[i - 1] = cv::imread(dataIn, 0);
             labels[i - 1] = -2;
+        }
+        else if (i < 126)
+        {
+            aux = std::to_string(i - 100);
+            dataIn = "resultadosSom/treinar/fecharTrain";
+            dataIn += aux;
+            dataIn += aux2;
+            imagem[i - 1] = cv::imread(dataIn, 0);
+            labels[i - 1] = 3;
+        }
+        else if (i < 151)
+        {
+            aux = std::to_string(i - 125);
+            dataIn = "resultadosSom/treinar/ifTrain";
+            dataIn += aux;
+            dataIn += aux2;
+            imagem[i - 1] = cv::imread(dataIn, 0);
+            labels[i - 1] = -3;
+        }
+        else if (i < 176)
+        {
+            aux = std::to_string(i - 150);
+            dataIn = "resultadosSom/treinar/loopTrain";
+            dataIn += aux;
+            dataIn += aux2;
+            imagem[i - 1] = cv::imread(dataIn, 0);
+            labels[i - 1] = 4;
         }
     }
 
@@ -564,7 +593,7 @@ void Test::trainSVM()
     // store its knowledge in a yaml file
     svm->save("knowledge.yml");
     //! [train]
-    cv::imshow("teste", matImage);
+    //cv::imshow("teste", matImage);
     cv::waitKey(0);
 }
 
@@ -572,7 +601,7 @@ void Test::loadSVM2()
 {
     int ii = 0;
     cv::Mat imagem;
-    imagem = cv::imread("testar/frenteTrain2.jpg", 0);
+    imagem = cv::imread("resultadosSom/treinar/direitaTrain2.jpg", 0);
     //imagem[1] = cv::imread("direitaTrain2.jpg", 0);
     //imagem[2] = cv::imread("frenteTrain4.jpg", 0);
     int lin = 10, col = 10;
@@ -611,23 +640,34 @@ void Test::loadSVM2()
     // std::cout << "Nu = " << svm->getNu() << std::endl;
     // std::cout << "Coef0 = " << svm->getCoef0() << std::endl;
 
-
     if (predicted == 1)
-            std::cout << std::endl
-                      << "Direita" << std::endl
-                      << std::endl;
-        else if (predicted == -1)
-            std::cout << std::endl
-                      << "Esquerda" << std::endl
-                      << std::endl;
-        else if (predicted == 2)
-            std::cout << std::endl
-                      << "Frente" << std::endl
-                      << std::endl;
-        else
-            std::cout << std::endl
-                      << "Tras" << std::endl
-                      << std::endl;
+        std::cout << std::endl
+                  << "Direita" << std::endl
+                  << std::endl;
+    else if (predicted == -1)
+        std::cout << std::endl
+                  << "Esquerda" << std::endl
+                  << std::endl;
+    else if (predicted == 2)
+        std::cout << std::endl
+                  << "Frente" << std::endl
+                  << std::endl;
+    else if (predicted == -2)
+        std::cout << std::endl
+                  << "Tras" << std::endl
+                  << std::endl;
+    else if (predicted == 3)
+        std::cout << std::endl
+                  << "Fechar" << std::endl
+                  << std::endl;
+    else if (predicted == -3)
+        std::cout << std::endl
+                  << "If" << std::endl
+                  << std::endl;
+    else
+        std::cout << std::endl
+                  << "Loop" << std::endl
+                  << std::endl;
 }
 
 void Test::loadSVM()
@@ -715,7 +755,7 @@ void Test::Geral(int argc, char **argv)
 
                 vision.show();
                 //vision.saveVideo();
-                if (cv::waitKey(1) == 27)//Press "Esc"
+                if (cv::waitKey(1) == 27) //Press "Esc"
                 {
                     cont++;
                     break;
@@ -861,9 +901,21 @@ void Test::Geral(int argc, char **argv)
                 std::cout << std::endl
                           << "Frente" << std::endl
                           << std::endl;
-            else
+            else if (predicted == -2)
                 std::cout << std::endl
                           << "Tras" << std::endl
+                          << std::endl;
+            else if (predicted == 3)
+                std::cout << std::endl
+                          << "Fechar" << std::endl
+                          << std::endl;
+            else if (predicted == -3)
+                std::cout << std::endl
+                          << "If" << std::endl
+                          << std::endl;
+            else
+                std::cout << std::endl
+                          << "Loop" << std::endl
                           << std::endl;
             //std::cout << std::endl
             //         << "Number -> " << predicted << std::endl
@@ -888,7 +940,7 @@ void Test::dados(int argc, char **argv)
         {
 
             aux = std::to_string(cont);
-            dataIn = "data/CtrlRobo/Frente/frente";
+            dataIn = "data/CtrlRobo/Fechar/fechar";
             dataIn += aux;
             dataIn += aux2;
 
