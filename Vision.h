@@ -143,7 +143,7 @@ class Vision
         cv::circle(TheInputImageCopy, ptCenter, radius, cv::Scalar(0, 0, 255), 1);
         cv::line(TheInputImageCopy, ptHorI, ptHorF, cv::Scalar(0, 255, 0), 1);
         cv::line(TheInputImageCopy, ptVerI, ptVerF, cv::Scalar(255, 0, 0), 1);
-        cv::line(TheInputImageCopy, ptDiagI, ptDiagF, cv::Scalar(255, 255, 255), 1);
+        cv::line(TheInputImageCopy, ptDiagI, ptDiagF, cv::Scalar(0, 255, 255), 1);
         cv::rectangle(TheInputImageCopy, ptCenter / 2, ptRecF, cv::Scalar(255, 0, 255), 1);
         imshow("in", TheInputImageCopy);
     }
