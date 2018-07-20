@@ -34,7 +34,8 @@ int main(int argc, char** argv) {
     //test.loadSVM2();
     //test.armInLine();
     //test.arucoDataSet();
-    test.Geral(argc, argv);
+    //test.Geral(argc, argv);
     //test.dados(argc, argv);
+
     return 0;
 }

@@ -728,6 +728,7 @@ void Test::Geral(int argc, char **argv)
     std::string dataIn, aux, aux2;
     //aux2 = ".csv";
     int cont = 1;
+    std::list<char> listaComandos;
 
     while (1)
     {
@@ -890,39 +891,58 @@ void Test::Geral(int argc, char **argv)
             std::cout << predicted << std::endl;
 
             if (predicted == 1)
+            {
                 std::cout << std::endl
                           << "Direita" << std::endl
                           << std::endl;
+                listaComandos.push_back('d');
+            }
             else if (predicted == -1)
+            {
                 std::cout << std::endl
                           << "Esquerda" << std::endl
                           << std::endl;
+                listaComandos.push_back('e');
+            }
             else if (predicted == 2)
+            {
                 std::cout << std::endl
                           << "Frente" << std::endl
                           << std::endl;
+                listaComandos.push_back('f');
+            }
             else if (predicted == -2)
+            {
                 std::cout << std::endl
                           << "Tras" << std::endl
                           << std::endl;
+                listaComandos.push_back('t');
+            }
             else if (predicted == 3)
+            {
                 std::cout << std::endl
-                          << "Fechar" << std::endl
+                          << "Close" << std::endl
                           << std::endl;
+                listaComandos.push_back('c');
+            }
             else if (predicted == -3)
+            {
                 std::cout << std::endl
                           << "If" << std::endl
                           << std::endl;
+                listaComandos.push_back('i');
+            }
             else
+            {
                 std::cout << std::endl
                           << "Loop" << std::endl
                           << std::endl;
-            //std::cout << std::endl
-            //         << "Number -> " << predicted << std::endl
-            //        << std::endl;
+                listaComandos.push_back('l');
+            }
         }
         //cout << "Esperando o 'n'!" << endl;
     }
+    //Enviar a lista para o bluetooth
 }
 
 void Test::dados(int argc, char **argv)
