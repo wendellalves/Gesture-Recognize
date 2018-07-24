@@ -18,6 +18,7 @@
 #include "opencv2/imgcodecs.hpp"
 //#include <opencv2/highgui.hpp>
 #include <opencv2/ml.hpp>
+#include "tcp_client.h"
 
 using namespace cv::ml;
 
@@ -725,7 +726,7 @@ void Test::Geral(int argc, char **argv)
 
     //test.trainSVM();
 
-    std::string dataIn, aux, aux2;
+    std::string dataIn, aux, aux2, dataOut, auxOut;
     //aux2 = ".csv";
     int cont = 1;
     std::list<char> listaComandos;
@@ -888,6 +889,12 @@ void Test::Geral(int argc, char **argv)
 
             int predicted = svm->predict(imagem1D);
 
+            tcp_client c;
+
+            //connect to host
+            c.conn("192.168.0.20", 80);
+            dataOut = "192.168.0.20";
+
             std::cout << predicted << std::endl;
 
             if (predicted == 1)
@@ -895,14 +902,18 @@ void Test::Geral(int argc, char **argv)
                 std::cout << std::endl
                           << "Direita" << std::endl
                           << std::endl;
-                listaComandos.push_back('d');
+                //listaComandos.push_back('d');
+                auxOut = "/LED";
+                dataOut += auxOut;
+                //send some data
+                c.send_data(dataOut);
             }
             else if (predicted == -1)
             {
                 std::cout << std::endl
                           << "Esquerda" << std::endl
                           << std::endl;
-                listaComandos.push_back('e');
+                //listaComandos.push_back('e');
             }
             else if (predicted == 2)
             {
@@ -924,6 +935,7 @@ void Test::Geral(int argc, char **argv)
                           << "Close" << std::endl
                           << std::endl;
                 listaComandos.push_back('c');
+                std::cout << "Enviar comandos" << std::endl;
             }
             else if (predicted == -3)
             {
@@ -995,7 +1007,25 @@ void Test::dados(int argc, char **argv)
         }
     }
 }
+void Test::tcpClient()
+{
+    tcp_client c;
+    std::string host;
 
+    std::cout << "Enter hostname : ";
+    host = "192.168.0.20";
+
+    //connect to host
+    c.conn(host, 80);
+
+    //send some data
+    c.send_data("http://192.168.0.20/LED");
+
+    //receive and echo reply
+    std::cout << "----------------------------\n\n";
+    std::cout << c.receive(1024);
+    std::cout << "\n\n----------------------------\n\n";
+}
 Test::~Test()
 {
 }

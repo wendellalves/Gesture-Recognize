@@ -11,6 +11,7 @@
 #include "SOM.h"
 #include "DataSet.h"
 #include <fstream>
+#include "tcp_client.h"
 
 class Test {
 public:
@@ -33,6 +34,7 @@ public:
     void loadLoadNetwork();
     void Geral(int argc, char** argv);
     void dados(int argc, char** argv);
+    void tcpClient();
 private:
     
     

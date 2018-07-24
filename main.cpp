@@ -14,6 +14,7 @@
 #include "Test.h"
 #include "string"
 #include <opencv2/opencv.hpp>
+#include"tcp_client.h"
 
 using namespace std;
 using namespace cv;
@@ -34,8 +35,9 @@ int main(int argc, char** argv) {
     //test.loadSVM2();
     //test.armInLine();
     //test.arucoDataSet();
-    //test.Geral(argc, argv);
+    test.Geral(argc, argv);
     //test.dados(argc, argv);
+    //test.tcpClient();
 
     return 0;
 }
