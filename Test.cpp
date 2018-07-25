@@ -727,6 +727,10 @@ void Test::Geral(int argc, char **argv)
     //test.trainSVM();
 
     std::string dataIn, aux, aux2, dataOut, auxOut;
+    dataOut = "10.6.3.105/";
+
+    tcp_client c;
+    //c.conn("10.6.3.105", 80);
     //aux2 = ".csv";
     int cont = 1;
     std::list<char> listaComandos;
@@ -889,11 +893,13 @@ void Test::Geral(int argc, char **argv)
 
             int predicted = svm->predict(imagem1D);
 
-            tcp_client c;
+            //tcp_client c;
 
             //connect to host
-            c.conn("192.168.0.20", 80);
-            dataOut = "192.168.0.20";
+            //c.conn("192.168.0.20", 80);
+            //dataOut = "192.168.0.20/";
+            c.conn("10.6.3.105", 80);
+            //dataOut = "10.6.3.105/";
 
             std::cout << predicted << std::endl;
 
@@ -903,10 +909,12 @@ void Test::Geral(int argc, char **argv)
                           << "Direita" << std::endl
                           << std::endl;
                 //listaComandos.push_back('d');
-                auxOut = "/LED";
+                auxOut = 'd';
                 dataOut += auxOut;
                 //send some data
-                c.send_data(dataOut);
+                std::cout << std::endl
+                          << dataOut << std::endl
+                          << std::endl;
             }
             else if (predicted == -1)
             {
@@ -914,20 +922,26 @@ void Test::Geral(int argc, char **argv)
                           << "Esquerda" << std::endl
                           << std::endl;
                 //listaComandos.push_back('e');
+                auxOut = 'e';
+                dataOut += auxOut;
             }
             else if (predicted == 2)
             {
                 std::cout << std::endl
                           << "Frente" << std::endl
                           << std::endl;
-                listaComandos.push_back('f');
+                //listaComandos.push_back('f');
+                auxOut = 'f';
+                dataOut += auxOut;
             }
             else if (predicted == -2)
             {
                 std::cout << std::endl
                           << "Tras" << std::endl
                           << std::endl;
-                listaComandos.push_back('t');
+                //listaComandos.push_back('t');
+                auxOut = 't';
+                dataOut += auxOut;
             }
             else if (predicted == 3)
             {
@@ -935,21 +949,39 @@ void Test::Geral(int argc, char **argv)
                           << "Close" << std::endl
                           << std::endl;
                 listaComandos.push_back('c');
-                std::cout << "Enviar comandos" << std::endl;
+                //std::cout << "Enviar comandos" << std::endl;
+                auxOut = 'c';
+                dataOut += auxOut;
+
+                //c.conn("10.6.3.105", 80);
+                c.send_data(dataOut);
+                
+                std::cout << std::endl
+                          << dataOut << std::endl
+                          << std::endl;
+                std::cout << std::endl
+                          << "ENVIADO" << std::endl
+                          << std::endl;
+
+                dataOut = "10.6.3.105/";
             }
             else if (predicted == -3)
             {
                 std::cout << std::endl
                           << "If" << std::endl
                           << std::endl;
-                listaComandos.push_back('i');
+                //listaComandos.push_back('i');
+                auxOut = 'i';
+                dataOut += auxOut;
             }
             else
             {
                 std::cout << std::endl
                           << "Loop" << std::endl
                           << std::endl;
-                listaComandos.push_back('l');
+                //listaComandos.push_back('l');
+                auxOut = 'l';
+                dataOut += auxOut;
             }
         }
         //cout << "Esperando o 'n'!" << endl;
@@ -1019,7 +1051,7 @@ void Test::tcpClient()
     c.conn(host, 80);
 
     //send some data
-    c.send_data("http://192.168.0.20/LED");
+    c.send_data("http://192.168.0.20/dc");
 
     //receive and echo reply
     std::cout << "----------------------------\n\n";
