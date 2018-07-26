@@ -1092,16 +1092,16 @@ void Test::GeralUDP(int argc, char **argv)
     CURL *curl;
     CURLcode res;
 
-    
-
     //test.trainSVM();
 
-    std::string dataIn, aux, aux2, dataOut, auxOut;
+    std::string dataIn, aux, aux2, dataOut, dataOutAux, auxOut;
     //dataOut = "192.168.0.20/";
     dataOut = "http://10.0.0.103/";
+    //dataOut = new std::string(&argv[3]);
+
     //aux2 = ".csv";
     int cont = 1;
-    std::list<char> listaComandos;
+    //std::list<char> listaComandos;
 
     while (1)
     {
