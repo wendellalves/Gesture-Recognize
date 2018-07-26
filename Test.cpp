@@ -727,9 +727,11 @@ void Test::Geral(int argc, char **argv)
     //test.trainSVM();
 
     std::string dataIn, aux, aux2, dataOut, auxOut;
-    dataOut = "10.6.3.105/";
+    dataOut = "192.168.0.20/";
+    //dataOut = "10.6.3.105/";
 
     tcp_client c;
+    //c.conn("192.168.0.20", 80);
     //c.conn("10.6.3.105", 80);
     //aux2 = ".csv";
     int cont = 1;
@@ -898,7 +900,7 @@ void Test::Geral(int argc, char **argv)
             //connect to host
             //c.conn("192.168.0.20", 80);
             //dataOut = "192.168.0.20/";
-            c.conn("10.6.3.105", 80);
+            //c.conn("10.6.3.105", 80);
             //dataOut = "10.6.3.105/";
 
             std::cout << predicted << std::endl;
@@ -954,6 +956,7 @@ void Test::Geral(int argc, char **argv)
                 dataOut += auxOut;
 
                 //c.conn("10.6.3.105", 80);
+                c.conn("192.168.0.20", 80);
                 c.send_data(dataOut);
                 
                 std::cout << std::endl
@@ -963,7 +966,8 @@ void Test::Geral(int argc, char **argv)
                           << "ENVIADO" << std::endl
                           << std::endl;
 
-                dataOut = "10.6.3.105/";
+                //dataOut = "10.6.3.105/";
+                dataOut = "192.168.0.20/";
             }
             else if (predicted == -3)
             {
