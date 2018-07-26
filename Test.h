@@ -33,8 +33,10 @@ public:
     void loadOrganizeCSVAruco();
     void loadLoadNetwork();
     void Geral(int argc, char** argv);
+    void GeralUDP(int argc, char** argv);
     void dados(int argc, char** argv);
     void tcpClient();
+    void udp_client();
 private:
     
     

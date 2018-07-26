@@ -19,6 +19,7 @@ tcp_client::tcp_client()
     port = 0;
     address = "";
 }
+
  
 /**
     Connect to a host on a certain port number
