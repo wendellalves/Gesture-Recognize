@@ -1098,7 +1098,7 @@ void Test::GeralUDP(int argc, char **argv)
 
     std::string dataIn, aux, aux2, dataOut, auxOut;
     //dataOut = "192.168.0.20/";
-    dataOut = "http://10.0.0.103/gpio/1";
+    dataOut = "http://10.0.0.103/";
     //aux2 = ".csv";
     int cont = 1;
     std::list<char> listaComandos;

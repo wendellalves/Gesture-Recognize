@@ -64,18 +64,27 @@ void compiler(String comandos) {
       case 'd':
         // girar para direita
         Serial.println("Girar para Direita");
+        digitalWrite(azul, 1);
+        delay(1000);
+        digitalWrite(azul, 0);
         break;
       case 'e':
         // girar para esquerda
         Serial.println("Girar para Esquerda");
+        digitalWrite(verde, 1);
+        delay(1000);
+        digitalWrite(verde, 0);
         break;
       case 'f':
         // ir em frente
         Serial.println("Ir para Frente");
+        digitalWrite(vermelho, 1);
+        delay(1000);
+        digitalWrite(vermelho, 0);
         break;
       case 't':
         // ir para tras
-        Serial.println("Ir para Tras");
+        Serial.println("Ir para Tras");        
         break;
       case 'c':
         // BREAK!
@@ -182,22 +191,9 @@ void loop() {
   // Match the request
   compiler(comandos);
 
-  //  int val;
-  //  if (req.indexOf("/gpio/0") != -1)
-  //    val = 0;
-  //  else if (req.indexOf("/gpio/1") != -1)
-  //    val = 1;
-  //  else {
-  //    Serial.println("invalid request");
-  //    client.stop();
-  //    return;
-  //  }
-
-  // Set GPIO2 according to the request
-  digitalWrite(azul, val);
 
   client.flush();
-
+  int val;
   // Prepare the response
   String s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>\r\nGPIO is now ";
   s += (val) ? "high" : "low";
