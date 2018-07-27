@@ -12,9 +12,13 @@
 const char* ssid = "12345678g";
 const char* password = "12345678g";
 
-#define verde 12
-#define azul 13
-#define vermelho 15
+#define me1 D1
+#define me2 D3
+#define md1 D2
+#define md2 D4
+#define tempo 1000
+#define tempogiro 100
+int i = 0;
 
 String comandos;
 
@@ -22,17 +26,24 @@ String comandos;
 // specify the port to listen on as an argument
 WiFiServer server(80);
 
+void parar() {
+  digitalWrite(me1, 0);
+  digitalWrite(me2, 0);
+  digitalWrite(md1, 0);
+  digitalWrite(md2, 0);
+  delay(tempogiro);
+}
+
 void setup() {
   Serial.begin(115200);
   delay(10);
 
   // prepare GPIO2
-  pinMode(azul, OUTPUT);
-  digitalWrite(azul, 0);
-  pinMode(verde, OUTPUT);
-  digitalWrite(verde, 0);
-  pinMode(vermelho, OUTPUT);
-  digitalWrite(vermelho, 0);
+  pinMode(me1, OUTPUT);
+  pinMode(me2, OUTPUT);
+  pinMode(md1, OUTPUT);
+  pinMode(md2, OUTPUT);
+  parar();
 
   // Connect to WiFi network
   Serial.println();
@@ -58,105 +69,82 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void compiler(String comandos) {
-  for (int i = 0; i < comandos.length(); i++) {
+void frente() {
+  digitalWrite(me1, 1);
+  digitalWrite(me2, 0);
+  digitalWrite(md1, 1);
+  digitalWrite(md2, 0);
+  delay(tempo);
+  parar();
+}
+
+void tras() {
+  digitalWrite(me1, 0);
+  digitalWrite(me2, 1);
+  digitalWrite(md1, 0);
+  digitalWrite(md2, 1);
+  delay(tempo);
+  parar();
+}
+
+void direita() {
+  digitalWrite(me1, 1);
+  digitalWrite(me2, 0);
+  digitalWrite(md1, 0);
+  digitalWrite(md2, 1);
+  delay(tempogiro);
+  parar();
+}
+
+void esquerda() {
+  digitalWrite(me1, 0);
+  digitalWrite(me2, 1);
+  digitalWrite(md1, 1);
+  digitalWrite(md2, 0);
+  delay(tempogiro);
+  parar();
+}
+
+void compiler(String comandos, int i) {
+  for (i; i < comandos.length(); i++) {
     switch (comandos.charAt(i)) {
       case 'd':
         // girar para direita
-        Serial.println("Girar para Direita");
-        digitalWrite(azul, 1);
-        delay(1000);
-        digitalWrite(azul, 0);
+        Serial.println("Direita");
+        direita();
+        frente();
         break;
       case 'e':
         // girar para esquerda
-        Serial.println("Girar para Esquerda");
-        digitalWrite(verde, 1);
-        delay(1000);
-        digitalWrite(verde, 0);
+        Serial.println("Esquerda");
+        esquerda();
+        frente();
         break;
       case 'f':
         // ir em frente
-        Serial.println("Ir para Frente");
-        digitalWrite(vermelho, 1);
-        delay(1000);
-        digitalWrite(vermelho, 0);
+        Serial.println("Frente");
+        frente();
         break;
       case 't':
         // ir para tras
-        Serial.println("Ir para Tras");        
+        Serial.println("Tras");
+        tras();
         break;
       case 'c':
         // BREAK!
         Serial.println("Parar");
+        parar();
         break;
       case 'i':
         // executa o if (Execute the next command)
         i++;
-        switch (comandos.charAt(i)) {
-          case 'd':
-            // girar para direita
-            Serial.println("Girar para Direita");
-            break;
-          case 'e':
-            // girar para esquerda
-            Serial.println("Girar para Esquerda");
-            break;
-          case 'f':
-            // ir em frente
-            Serial.println("Ir para Frente");
-            break;
-          case 't':
-            // ir para tras
-            Serial.println("Ir para Tras");
-            break;
-          case 'c':
-            // BREAK!
-            Serial.println("Parar");
-            break;
-          case 'l':
-            // Loop
-            break;
-          default:
-            // Break too
-            break;
-        }
+        compiler(comandos, i);
         break;
       case 'l':
         // Loop (Execute the command 3 times)
         i++;
         for (int j = 0; j < 3; j++) {
-          switch (comandos.charAt(i)) {
-            case 'd':
-              // girar para direita
-              Serial.println("Girar para Direita");
-              break;
-            case 'e':
-              // girar para esquerda
-              Serial.println("Girar para Esquerda");
-              break;
-            case 'f':
-              // ir em frente
-              Serial.println("Ir para Frente");
-              break;
-            case 't':
-              // ir para tras
-              Serial.println("Ir para Tras");
-              break;
-            case 'c':
-              // BREAK!
-              Serial.println("Parar");
-              break;
-            case 'i':
-              // statements
-              break;
-            case 'l':
-              // Loop
-              break;
-            default:
-              // Break too
-              break;
-          }
+          compiler(comandos, i);
         }
         break;
       default:
@@ -188,8 +176,9 @@ void loop() {
 
   client.flush();
 
+  i = 0;
   // Match the request
-  compiler(comandos);
+  compiler(comandos, i);
 
 
   client.flush();
