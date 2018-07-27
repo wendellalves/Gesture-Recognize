@@ -16,8 +16,9 @@ const char* password = "12345678g";
 #define me2 D3
 #define md1 D2
 #define md2 D4
-#define tempo 1000
-#define tempogiro 100
+#define tempo 500
+#define tempogiro 200
+#define tempopara 1000
 int i = 0;
 
 String comandos;
@@ -31,7 +32,7 @@ void parar() {
   digitalWrite(me2, 0);
   digitalWrite(md1, 0);
   digitalWrite(md2, 0);
-  delay(tempogiro);
+  delay(tempopara);
 }
 
 void setup() {
@@ -75,7 +76,6 @@ void frente() {
   digitalWrite(md1, 1);
   digitalWrite(md2, 0);
   delay(tempo);
-  parar();
 }
 
 void tras() {
@@ -84,7 +84,6 @@ void tras() {
   digitalWrite(md1, 0);
   digitalWrite(md2, 1);
   delay(tempo);
-  parar();
 }
 
 void direita() {
@@ -93,7 +92,6 @@ void direita() {
   digitalWrite(md1, 0);
   digitalWrite(md2, 1);
   delay(tempogiro);
-  parar();
 }
 
 void esquerda() {
@@ -102,7 +100,6 @@ void esquerda() {
   digitalWrite(md1, 1);
   digitalWrite(md2, 0);
   delay(tempogiro);
-  parar();
 }
 
 void compiler(String comandos, int i) {
@@ -113,22 +110,26 @@ void compiler(String comandos, int i) {
         Serial.println("Direita");
         direita();
         frente();
+        parar();
         break;
       case 'e':
         // girar para esquerda
         Serial.println("Esquerda");
         esquerda();
         frente();
+        parar();
         break;
       case 'f':
         // ir em frente
         Serial.println("Frente");
         frente();
+        parar();
         break;
       case 't':
         // ir para tras
         Serial.println("Tras");
         tras();
+        parar();
         break;
       case 'c':
         // BREAK!
@@ -154,7 +155,7 @@ void compiler(String comandos, int i) {
   }
 }
 
-void loop() {
+void servidor() {
   // Check if a client has connected
   WiFiClient client = server.available();
   if (!client) {
@@ -176,10 +177,8 @@ void loop() {
 
   client.flush();
 
-  i = 0;
-  // Match the request
-  compiler(comandos, i);
-
+ 
+  
 
   client.flush();
   int val;
@@ -196,3 +195,12 @@ void loop() {
   // The client will actually be disconnected
   // when the function returns and 'client' object is detroyed
 }
+
+void loop(){
+  servidor();
+  i = 0;
+  // Match the request
+  compiler(comandos, i);
+}
+
+
