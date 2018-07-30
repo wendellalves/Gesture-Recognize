@@ -1096,7 +1096,7 @@ void Test::GeralUDP(int argc, char **argv)
 
     std::string dataIn, aux, aux2, dataOut, dataOutAux, auxOut;
     //dataOut = "192.168.0.20/";
-    dataOut = "http://10.0.0.103/";
+    dataOut = "http://10.0.0.101/";
     //dataOut = new std::string(&argv[3]);
 
     //aux2 = ".csv";
@@ -1352,7 +1352,7 @@ void Test::GeralUDP(int argc, char **argv)
                           << "ENVIADO" << std::endl 
                           << std::endl;
 
-                dataOut = "http://10.0.0.103/";
+                dataOut = "http://10.0.0.101/";
             }
             else if (predicted == -3)
             {

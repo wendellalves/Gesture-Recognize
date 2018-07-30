@@ -16,10 +16,11 @@ const char* password = "12345678g";
 #define me2 D3
 #define md1 D2
 #define md2 D4
-#define tempo 500
-#define tempogiro 200
-#define tempopara 1000
+#define tempo 1000
+#define tempogiro 100
+#define tempopara 500
 int i = 0;
+int flag = 1;
 
 String comandos;
 
@@ -71,19 +72,20 @@ void setup() {
 }
 
 void frente() {
-  digitalWrite(me1, 1);
+  digitalWrite(me1, 128);
   digitalWrite(me2, 0);
-  digitalWrite(md1, 1);
+  digitalWrite(md1, 128);
   digitalWrite(md2, 0);
   delay(tempo);
 }
 
 void tras() {
-  digitalWrite(me1, 0);
+  digitalWrite(me1, 1);
   digitalWrite(me2, 1);
-  digitalWrite(md1, 0);
+  digitalWrite(md1, 1);
   digitalWrite(md2, 1);
   delay(tempo);
+  Serial.println("entrou na tras");
 }
 
 void direita() {
@@ -95,9 +97,9 @@ void direita() {
 }
 
 void esquerda() {
-  digitalWrite(me1, 0);
+  digitalWrite(me1, 1);
   digitalWrite(me2, 1);
-  digitalWrite(md1, 1);
+  digitalWrite(md1, 0);
   digitalWrite(md2, 0);
   delay(tempogiro);
 }
@@ -109,14 +111,14 @@ void compiler(String comandos, int i) {
         // girar para direita
         Serial.println("Direita");
         direita();
-        frente();
+        //frente();
         parar();
         break;
       case 'e':
         // girar para esquerda
         Serial.println("Esquerda");
         esquerda();
-        frente();
+        //frente();
         parar();
         break;
       case 'f':
@@ -175,12 +177,12 @@ void servidor() {
   comandos = req.substring(req.indexOf("/"));
   Serial.print("Comandos = "); Serial.println(comandos);
 
+  flag = 1;
   client.flush();
 
- 
-  
 
-  client.flush();
+
+  //client.flush();
   int val;
   // Prepare the response
   String s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>\r\nGPIO is now ";
@@ -196,11 +198,11 @@ void servidor() {
   // when the function returns and 'client' object is detroyed
 }
 
-void loop(){
+void loop() {
   servidor();
   i = 0;
-  // Match the request
-  compiler(comandos, i);
+  if (flag == 1)
+    compiler(comandos, i);
+  flag = 0;
 }
-
 
