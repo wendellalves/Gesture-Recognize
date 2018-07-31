@@ -1096,11 +1096,11 @@ void Test::GeralUDP(int argc, char **argv)
 
     std::string dataIn, aux, aux2, dataOut, dataOutAux, auxOut;
     //dataOut = "192.168.0.20/";
-    dataOut = "http://10.0.0.101/";
+    dataOut = "http://10.0.0.100/";
     //dataOut = new std::string(&argv[3]);
 
     //aux2 = ".csv";
-    int cont = 1;
+    int cont = 1, contLoop = 0;
     //std::list<char> listaComandos;
 
     while (1)
@@ -1330,29 +1330,36 @@ void Test::GeralUDP(int argc, char **argv)
                 std::cout << std::endl
                           << dataOut << std::endl
                           << std::endl;
-                char teste[dataOut.length()];
-                strcpy(teste, dataOut.c_str());
 
-                curl = curl_easy_init();
-                if (curl)
+                if (contLoop == 0)
                 {
-                    curl_easy_setopt(curl, CURLOPT_URL, teste); //(1)
+                    char teste[dataOut.length()];
+                    strcpy(teste, dataOut.c_str());
 
-                    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+                    curl = curl_easy_init();
+                    if (curl)
+                    {
+                        curl_easy_setopt(curl, CURLOPT_URL, teste); //(1)
 
-                    res = curl_easy_perform(curl);
+                        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
-                    if (res != CURLE_OK)
-                        fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+                        res = curl_easy_perform(curl);
 
-                    curl_easy_cleanup(curl);
+                        if (res != CURLE_OK)
+                            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+
+                        curl_easy_cleanup(curl);
+                    }
+
+                    std::cout << std::endl
+                              << "ENVIADO" << std::endl
+                              << std::endl;
+
+                    dataOut = "http://10.0.0.100/";
                 }
-
-                std::cout << std::endl
-                          << "ENVIADO" << std::endl 
-                          << std::endl;
-
-                dataOut = "http://10.0.0.101/";
+                else{
+                    contLoop--;
+                }
             }
             else if (predicted == -3)
             {
@@ -1373,6 +1380,10 @@ void Test::GeralUDP(int argc, char **argv)
                 //listaComandos.push_back('l');
                 auxOut = 'l';
                 dataOut += auxOut;
+                contLoop++;
+                std::cout << std::endl
+                          << "Abriu Loop" << contLoop << std::endl
+                          << std::endl;
                 std::cout << std::endl
                           << dataOut << std::endl
                           << std::endl;

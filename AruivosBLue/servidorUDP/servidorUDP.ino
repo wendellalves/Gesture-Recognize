@@ -105,6 +105,7 @@ void esquerda() {
 }
 
 void compiler(String comandos, int i) {
+  int lup;
   for (i; i < comandos.length(); i++) {
     switch (comandos.charAt(i)) {
       case 'd':
@@ -144,7 +145,7 @@ void compiler(String comandos, int i) {
         compiler(comandos, i);
         break;
       case 'l':
-        // Loop (Execute the command 3 times)
+        // Loop
         i++;
         for (int j = 0; j < 3; j++) {
           compiler(comandos, i);
@@ -160,6 +161,7 @@ void compiler(String comandos, int i) {
 void servidor() {
   // Check if a client has connected
   WiFiClient client = server.available();
+  //client = server.available();
   if (!client) {
     return;
   }
