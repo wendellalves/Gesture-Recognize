@@ -1096,297 +1096,315 @@ void Test::GeralUDP(int argc, char **argv)
 
     std::string dataIn, aux, aux2, dataOut, dataOutAux, auxOut;
     //dataOut = "192.168.0.20/";
-    dataOut = "http://10.0.0.100/";
+    dataOut = "http://10.0.0.102/";
     //dataOut = new std::string(&argv[3]);
 
     //aux2 = ".csv";
     int cont = 1, contLoop = 0;
     //std::list<char> listaComandos;
-
+    dataIn = "resultados/teste.csv";
+    //vision.saveMovement(dataIn);
     while (1)
     {
-        if (cv::waitKey(1) == 110) // Press "n"
+        vision.calculateTagCenter();
+        if (vision.isTargetOn())
         {
-
-            //aux = std::to_string(cont);
-            dataIn = "resultados/teste.csv";
-            //dataIn += aux;
-            //dataIn += aux2;
-
-            // dataIn = "resultados/teste";
-            // dataIn += aux2;
-
-            vision.saveMovement(dataIn);
-            //vision.record("../Samples/sample.avi");
-
-            while (1)
+             
+            vision.show();
+            //std::cout << vision.getCenter().x << " " << vision.getCenter().y << std::endl;
+            if ((300 < vision.getCenter().x && vision.getCenter().x < 340) &&
+                (220 < vision.getCenter().y && vision.getCenter().y < 260) /*cv::waitKey(1) == 110*/) // Press "n"
             {
-                vision.calculateTagCenter();
-                if (vision.isTargetOn())
+                std::cout << "Iniciou a gravação" << std::endl;
+                //aux = std::to_string(cont);
+
+                //dataIn += aux;
+                //dataIn += aux2;
+
+                // dataIn = "resultados/teste";
+                // dataIn += aux2;
+
+                vision.saveMovement(dataIn);
+
+                //vision.record("../Samples/sample.avi");
+
+                while (1)
                 {
-                    vision.savePoint(vision.getCenter());
-                }
+                    vision.calculateTagCenter();
 
-                vision.show();
-                //vision.saveVideo();
-                if (cv::waitKey(1) == 27) //Press "Esc"
-                {
-                    cont++;
-                    break;
-                }
-                //cout << "salvando o centro" << endl;
-            }
-            vision.endSaving();
-            std::cout << "Salvou!" << std::endl;
-            int cont = 0, linhas, colunas = 2;
-            std::string arquivoIn, arquivoOut;
-
-            arquivoIn = "resultados/teste.csv";
-            arquivoOut = "resultados/testeIn.csv";
-            //arquivoIn = "data/dadosAruco/DE.csv";
-            //arquivoOut = "data/dadosAruco/DEOrganizado.csv";
-
-            // Creating an object of CSVWriter
-            CSVReader reader(arquivoIn);
-
-            std::ofstream myfile;
-            myfile.open(arquivoOut);
-
-            // Get the data from CSV File
-            std::vector<std::vector<std::string>> dataList = reader.getData();
-
-            linhas = dataList.size();
-
-            myfile << linhas << " " << colunas << "\n";
-
-            for (std::vector<std::string> vec : dataList)
-            {
-                for (std::string data : vec)
-                {
-                    myfile << data;
-                    myfile << " ";
-                    cont++;
-                    if (cont == 2)
+                    if (vision.isTargetOn())
                     {
-                        myfile << "\n";
-                        cont = 0;
+                        vision.savePoint(vision.getCenter());
+                    }
+
+                    vision.show();
+                    //vision.saveVideo();
+                    //std::cout << vision.getCenter().x << " " << vision.getCenter().y << std::endl;
+                    if (((10 < vision.getCenter().x && vision.getCenter().x < 50) ||
+                         (590 < vision.getCenter().x && vision.getCenter().x < 630)) ||
+                        ((10 < vision.getCenter().y && vision.getCenter().y < 50) ||
+                         (430 < vision.getCenter().y && vision.getCenter().y < 470))) //cv::waitKey(1) == 27) //Press "Esc"
+                    {
+                        
+                        cont++;
+                        break;
+                    }
+                    //cout << "salvando o centro" << endl;
+                }
+
+                vision.endSaving();
+                std::cout << "Salvou!" << std::endl;
+                int cont = 0, linhas, colunas = 2;
+                std::string arquivoIn, arquivoOut;
+
+                arquivoIn = "resultados/teste.csv";
+                arquivoOut = "resultados/testeIn.csv";
+                //arquivoIn = "data/dadosAruco/DE.csv";
+                //arquivoOut = "data/dadosAruco/DEOrganizado.csv";
+
+                // Creating an object of CSVWriter
+                CSVReader reader(arquivoIn);
+
+                std::ofstream myfile;
+                myfile.open(arquivoOut);
+
+                // Get the data from CSV File
+                std::vector<std::vector<std::string>> dataList = reader.getData();
+
+                linhas = dataList.size();
+
+                myfile << linhas << " " << colunas << "\n";
+
+                for (std::vector<std::string> vec : dataList)
+                {
+                    for (std::string data : vec)
+                    {
+                        myfile << data;
+                        myfile << " ";
+                        cont++;
+                        if (cont == 2)
+                        {
+                            myfile << "\n";
+                            cont = 0;
+                        }
                     }
                 }
-            }
-            //std::cout << dataList.size();
+                //std::cout << dataList.size();
 
-            myfile.close();
+                myfile.close();
 
-            int tam = 10, iImagem, jImagem;
-            int tamImagem = tam * 80; // para uma resolucao maior
-            cv::Mat image(tamImagem, tamImagem, 0);
-            cv::Mat imagem(tam, tam, 0);
-            std::string posImagem;
-            SOM som(tam);
-            DataSet data;
-            Sample *s;
-            //Node* vencedor;
-            //std::vector <Node*> vencedores; // v = find  ...
+                int tam = 10, iImagem, jImagem;
+                int tamImagem = tam * 80; // para uma resolucao maior
+                cv::Mat image(tamImagem, tamImagem, 0);
+                cv::Mat imagem(tam, tam, 0);
+                std::string posImagem;
+                SOM som(tam);
+                DataSet data;
+                Sample *s;
+                //Node* vencedor;
+                //std::vector <Node*> vencedores; // v = find  ...
 
-            std::string dataInSOM, imageOutVisual, imageOutTrain;
+                std::string dataInSOM, imageOutVisual, imageOutTrain;
 
-            //int imagem[tamImagem][tamImagem];
+                //int imagem[tamImagem][tamImagem];
 
-            som.loadNetworkAruco("visualization/treinamentoAruco/2500000.csv", tam);
+                som.loadNetworkAruco("visualization/treinamentoAruco/2500000.csv", tam);
 
-            for (int i = 0; i < tamImagem; i++)
-            {
-                for (int j = 0; j < tamImagem; j++)
+                for (int i = 0; i < tamImagem; i++)
                 {
-                    //imagem[i][j] = 0;
-                    image.at<uchar>(i, j) = 0;
+                    for (int j = 0; j < tamImagem; j++)
+                    {
+                        //imagem[i][j] = 0;
+                        image.at<uchar>(i, j) = 0;
+                    }
                 }
-            }
 
-            for (int i = 0; i < tam; i++)
-            {
-                for (int j = 0; j < tam; j++)
+                for (int i = 0; i < tam; i++)
                 {
-                    imagem.at<uchar>(i, j) = 0;
+                    for (int j = 0; j < tam; j++)
+                    {
+                        imagem.at<uchar>(i, j) = 0;
+                    }
                 }
-            }
 
-            dataInSOM = "resultados/testeIn.csv";
+                dataInSOM = "resultados/testeIn.csv";
 
-            imageOutVisual = "resultados/visual.jpg";
+                imageOutVisual = "resultados/visual.jpg";
 
-            imageOutTrain = "resultados/teste.jpg";
+                imageOutTrain = "resultados/teste.jpg";
 
-            data.loadDataFromFile(dataInSOM);
+                data.loadDataFromFile(dataInSOM);
 
-            s = data.getRandomSample();
-            som.findWinner(s, iImagem, jImagem);
-
-            while (!(data.getRandomSample(s)))
-            {
+                s = data.getRandomSample();
                 som.findWinner(s, iImagem, jImagem);
 
-                imagem.at<uchar>(iImagem, jImagem) = 255;
-
-                for (int i = iImagem * 80; i < (iImagem * 80 + 80); i++)
+                while (!(data.getRandomSample(s)))
                 {
-                    for (int j = jImagem * 80; j < (jImagem * 80 + 80); j++)
+                    som.findWinner(s, iImagem, jImagem);
+
+                    imagem.at<uchar>(iImagem, jImagem) = 255;
+
+                    for (int i = iImagem * 80; i < (iImagem * 80 + 80); i++)
                     {
-                        image.at<uchar>(i, j) = 255;
+                        for (int j = jImagem * 80; j < (jImagem * 80 + 80); j++)
+                        {
+                            image.at<uchar>(i, j) = 255;
+                        }
                     }
                 }
-            }
 
-            //cv::imshow("Nodes", image);
-            cv::imwrite(imageOutVisual, image);
-            cv::imwrite(imageOutTrain, imagem);
-            //cv::waitKey();
+                //cv::imshow("Nodes", image);
+                cv::imwrite(imageOutVisual, image);
+                cv::imwrite(imageOutTrain, imagem);
+                //cv::waitKey();
 
-            int ii = 0;
-            cv::Mat imagem2 = cv::imread("resultados/teste.jpg", 0);
-            int lin = imagem2.rows, col = imagem2.cols;
-            int tamImg = lin * col;
+                int ii = 0;
+                cv::Mat imagem2 = cv::imread("resultados/teste.jpg", 0);
+                int lin = imagem2.rows, col = imagem2.cols;
+                int tamImg = lin * col;
 
-            cv::Mat imagem1D(1, tamImg, CV_32FC1);
-            cv::Ptr<SVM> svm;
-            svm = cv::Algorithm::load<SVM>("knowledge.yml");
+                cv::Mat imagem1D(1, tamImg, CV_32FC1);
+                cv::Ptr<SVM> svm;
+                svm = cv::Algorithm::load<SVM>("knowledge.yml");
 
-            for (int i = 0; i < lin; i++)
-            {
-                for (int j = 0; j < col; j++)
+                for (int i = 0; i < lin; i++)
                 {
-                    imagem1D.at<float>(0, ii++) = imagem2.at<uchar>(i, j);
-                }
-            }
-
-            int predicted = svm->predict(imagem1D);
-
-            //tcp_client c;
-
-            //connect to host
-            //c.conn("192.168.0.20", 80);
-            //dataOut = "192.168.0.20/";
-            //c.conn("10.6.3.105", 80);
-            //dataOut = "10.6.3.105/";
-
-            std::cout << predicted << std::endl;
-
-            if (predicted == 1)
-            {
-                std::cout << std::endl
-                          << "Direita" << std::endl
-                          << std::endl;
-                //listaComandos.push_back('d');
-                auxOut = 'd';
-                dataOut += auxOut;
-                //send some data
-                std::cout << std::endl
-                          << dataOut << std::endl
-                          << std::endl;
-            }
-            else if (predicted == -1)
-            {
-                std::cout << std::endl
-                          << "Esquerda" << std::endl
-                          << std::endl;
-                //listaComandos.push_back('e');
-                auxOut = 'e';
-                dataOut += auxOut;
-                std::cout << std::endl
-                          << dataOut << std::endl
-                          << std::endl;
-            }
-            else if (predicted == 2)
-            {
-                std::cout << std::endl
-                          << "Frente" << std::endl
-                          << std::endl;
-                //listaComandos.push_back('f');
-                auxOut = 'f';
-                dataOut += auxOut;
-                std::cout << std::endl
-                          << dataOut << std::endl
-                          << std::endl;
-            }
-            else if (predicted == -2)
-            {
-                std::cout << std::endl
-                          << "Tras" << std::endl
-                          << std::endl;
-                //listaComandos.push_back('t');
-                auxOut = 't';
-                dataOut += auxOut;
-                std::cout << std::endl
-                          << dataOut << std::endl
-                          << std::endl;
-            }
-            else if (predicted == 3)
-            {
-                std::cout << std::endl
-                          << "Close" << std::endl
-                          << std::endl;
-                auxOut = 'c';
-                dataOut += auxOut;
-                std::cout << std::endl
-                          << dataOut << std::endl
-                          << std::endl;
-
-                if (contLoop == 0)
-                {
-                    char teste[dataOut.length()];
-                    strcpy(teste, dataOut.c_str());
-
-                    curl = curl_easy_init();
-                    if (curl)
+                    for (int j = 0; j < col; j++)
                     {
-                        curl_easy_setopt(curl, CURLOPT_URL, teste); //(1)
-
-                        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-
-                        res = curl_easy_perform(curl);
-
-                        if (res != CURLE_OK)
-                            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-
-                        curl_easy_cleanup(curl);
+                        imagem1D.at<float>(0, ii++) = imagem2.at<uchar>(i, j);
                     }
+                }
 
+                int predicted = svm->predict(imagem1D);
+
+                //tcp_client c;
+
+                //connect to host
+                //c.conn("192.168.0.20", 80);
+                //dataOut = "192.168.0.20/";
+                //c.conn("10.6.3.105", 80);
+                //dataOut = "10.6.3.105/";
+
+                std::cout << predicted << std::endl;
+
+                if (predicted == 1)
+                {
                     std::cout << std::endl
-                              << "ENVIADO" << std::endl
+                              << "Direita" << std::endl
+                              << std::endl;
+                    //listaComandos.push_back('d');
+                    auxOut = 'd';
+                    dataOut += auxOut;
+                    //send some data
+                    std::cout << std::endl
+                              << dataOut << std::endl
+                              << std::endl;
+                }
+                else if (predicted == -1)
+                {
+                    std::cout << std::endl
+                              << "Esquerda" << std::endl
+                              << std::endl;
+                    //listaComandos.push_back('e');
+                    auxOut = 'e';
+                    dataOut += auxOut;
+                    std::cout << std::endl
+                              << dataOut << std::endl
+                              << std::endl;
+                }
+                else if (predicted == 2)
+                {
+                    std::cout << std::endl
+                              << "Frente" << std::endl
+                              << std::endl;
+                    //listaComandos.push_back('f');
+                    auxOut = 'f';
+                    dataOut += auxOut;
+                    std::cout << std::endl
+                              << dataOut << std::endl
+                              << std::endl;
+                }
+                else if (predicted == -2)
+                {
+                    std::cout << std::endl
+                              << "Tras" << std::endl
+                              << std::endl;
+                    //listaComandos.push_back('t');
+                    auxOut = 't';
+                    dataOut += auxOut;
+                    std::cout << std::endl
+                              << dataOut << std::endl
+                              << std::endl;
+                }
+                else if (predicted == 3)
+                {
+                    std::cout << std::endl
+                              << "Close" << std::endl
+                              << std::endl;
+                    auxOut = 'c';
+                    dataOut += auxOut;
+                    std::cout << std::endl
+                              << dataOut << std::endl
                               << std::endl;
 
-                    dataOut = "http://10.0.0.100/";
+                    if (contLoop == 0)
+                    {
+                        char teste[dataOut.length()];
+                        strcpy(teste, dataOut.c_str());
+
+                        curl = curl_easy_init();
+                        if (curl)
+                        {
+                            curl_easy_setopt(curl, CURLOPT_URL, teste); //(1)
+
+                            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+                            res = curl_easy_perform(curl);
+
+                            if (res != CURLE_OK)
+                                fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+
+                            curl_easy_cleanup(curl);
+                        }
+
+                        std::cout << std::endl
+                                  << "ENVIADO" << std::endl
+                                  << std::endl;
+
+                        dataOut = "http://10.0.0.102/";
+                    }
+                    else
+                    {
+                        contLoop--;
+                    }
                 }
-                else{
-                    contLoop--;
+                else if (predicted == -3)
+                {
+                    std::cout << std::endl
+                              << "If" << std::endl
+                              << std::endl;
+                    auxOut = 'i';
+                    dataOut += auxOut;
+                    std::cout << std::endl
+                              << dataOut << std::endl
+                              << std::endl;
                 }
-            }
-            else if (predicted == -3)
-            {
-                std::cout << std::endl
-                          << "If" << std::endl
-                          << std::endl;
-                auxOut = 'i';
-                dataOut += auxOut;
-                std::cout << std::endl
-                          << dataOut << std::endl
-                          << std::endl;
-            }
-            else
-            {
-                std::cout << std::endl
-                          << "Loop" << std::endl
-                          << std::endl;
-                //listaComandos.push_back('l');
-                auxOut = 'l';
-                dataOut += auxOut;
-                contLoop++;
-                std::cout << std::endl
-                          << "Abriu Loop" << contLoop << std::endl
-                          << std::endl;
-                std::cout << std::endl
-                          << dataOut << std::endl
-                          << std::endl;
+                else
+                {
+                    std::cout << std::endl
+                              << "Loop" << std::endl
+                              << std::endl;
+                    //listaComandos.push_back('l');
+                    auxOut = 'l';
+                    dataOut += auxOut;
+                    contLoop++;
+                    std::cout << std::endl
+                              << "Abriu Loop" << contLoop << std::endl
+                              << std::endl;
+                    std::cout << std::endl
+                              << dataOut << std::endl
+                              << std::endl;
+                }
             }
         }
     }
