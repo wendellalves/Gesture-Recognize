@@ -1,6 +1,5 @@
 #include <ESP8266WiFi.h>
 
-
 const char* ssid = "12345678g";
 const char* password = "12345678g";
 
@@ -17,18 +16,30 @@ int i = 0;
 int flag = 1;
 int tam;
 
+WiFiClient client;
+
 String comandos;
 
 // Create an instance of the server
 // specify the port to listen on as an argument
 WiFiServer server(80);
 
+bool delay2(int max) {
+  int tmp = millis();
+  while (millis() - tmp < max) {
+    if (conexao.available()) {
+      return true;
+    }
+  }
+  return false;
+}
+
 void parar() {
   digitalWrite(me1, 0);
   digitalWrite(me2, 0);
   digitalWrite(md1, 0);
   digitalWrite(md2, 0);
-  delay(tempopara);
+  delay2(tempopara);
 }
 
 void setup() {
@@ -66,12 +77,27 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
+void startServer(){
+  // Check if a client has connected
+  client = server.available();
+
+  if (!client) {
+    return;
+  }
+
+  // Wait until the client sends some data
+  Serial.println("new client");
+  while (!client.available()) {
+    delay(1);
+  }
+}
+
 void frente() {
   digitalWrite(me1, 128);
   digitalWrite(me2, 0);
   digitalWrite(md1, 128);
   digitalWrite(md2, 0);
-  delay(tempo);
+  delay2(tempo);
 }
 
 void tras() {
@@ -79,7 +105,7 @@ void tras() {
   digitalWrite(me2, 1);
   digitalWrite(md1, 1);
   digitalWrite(md2, 1);
-  delay(tempo);
+  delay2(tempo);
   Serial.println("entrou na tras");
 }
 
@@ -88,7 +114,7 @@ void direita() {
   digitalWrite(me2, 0);
   digitalWrite(md1, 0);
   digitalWrite(md2, 1);
-  delay(tempogiro);
+  delay2(tempogiro);
 }
 
 void esquerda() {
@@ -96,7 +122,7 @@ void esquerda() {
   digitalWrite(me2, 1);
   digitalWrite(md1, 0);
   digitalWrite(md2, 0);
-  delay(tempogiro);
+  delay2(tempogiro);
 }
 
 void pulaAteC(int& PC, char  comandos[]) {
@@ -132,7 +158,7 @@ bool ifIF(char COND) {
       break;
   }
 }
-int compiler() {
+void compiler() {
   int S[tam];
   int SP = 0;
   for (int PC = 0; PC < tam; PC++) {
@@ -176,18 +202,7 @@ int compiler() {
 
 
 void servidor() {
-  // Check if a client has connected
-  WiFiClient client = server.available();
-  //client = server.available();
-  if (!client) {
-    return;
-  }
-
-  // Wait until the client sends some data
-  Serial.println("new client");
-  while (!client.available()) {
-    delay(1);
-  }
+  
 
   // Read the first line of the request
   String req = client.readStringUntil('\r');
@@ -210,7 +225,7 @@ void servidor() {
 
   // Send the response to the client
   client.print(s);
-  delay(1);
+  delay2(1);
   Serial.println("Client disonnected");
 
   // The client will actually be disconnected
@@ -218,9 +233,10 @@ void servidor() {
 }
 
 void loop() {
+  startServer();
   servidor();
   i = 0;
-  
+
   if (flag == 1)
     compiler(comandos, i);
   flag = 0;

@@ -1100,7 +1100,7 @@ void Test::GeralUDP(int argc, char **argv)
     //dataOut = new std::string(&argv[3]);
 
     //aux2 = ".csv";
-    int cont = 1, contLoop = 0;
+    int cont = 1, contLoop = 0, contTab = 0;
     //std::list<char> listaComandos;
     dataIn = "resultados/teste.csv";
     //vision.saveMovement(dataIn);
@@ -1109,7 +1109,7 @@ void Test::GeralUDP(int argc, char **argv)
         vision.calculateTagCenter();
         if (vision.isTargetOn())
         {
-             
+
             vision.show();
             //std::cout << vision.getCenter().x << " " << vision.getCenter().y << std::endl;
             if ((300 < vision.getCenter().x && vision.getCenter().x < 340) &&
@@ -1145,7 +1145,7 @@ void Test::GeralUDP(int argc, char **argv)
                         ((10 < vision.getCenter().y && vision.getCenter().y < 50) ||
                          (430 < vision.getCenter().y && vision.getCenter().y < 470))) //cv::waitKey(1) == 27) //Press "Esc"
                     {
-                        
+
                         cont++;
                         break;
                     }
@@ -1376,7 +1376,7 @@ void Test::GeralUDP(int argc, char **argv)
                     else
                     {
                         contLoop--;
-                    }
+                    }                  
                 }
                 else if (predicted == -3)
                 {
