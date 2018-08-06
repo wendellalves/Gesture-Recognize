@@ -19,6 +19,7 @@
 #include "tcp_client.h"
 #include <stdio.h>
 #include <curl/curl.h>
+#include <stack>
 
 using namespace cv::ml;
 
@@ -665,7 +666,7 @@ void Test::loadSVM2()
         std::cout << std::endl
                   << "If" << std::endl
                   << std::endl;
-    else
+    else if(predicted == 4)
         std::cout << std::endl
                   << "Loop" << std::endl
                   << std::endl;
@@ -1094,13 +1095,15 @@ void Test::GeralUDP(int argc, char **argv)
 
     //test.trainSVM();
 
-    std::string dataIn, aux, aux2, dataOut, dataOutAux, auxOut;
+    std::string dataIn, aux, aux2, dataOut, dataOutAux, identacao, listaComandos;
+    char auxOut;
+    std::stack<char> blocos;
     //dataOut = "192.168.0.20/";
     dataOut = "http://10.0.0.102/";
     //dataOut = new std::string(&argv[3]);
 
     //aux2 = ".csv";
-    int cont = 1, contLoop = 0, contTab = 0;
+    int cont = 1, contLoop = 0, contIf = 0;
     //std::list<char> listaComandos;
     dataIn = "resultados/teste.csv";
     //vision.saveMovement(dataIn);
@@ -1285,72 +1288,73 @@ void Test::GeralUDP(int argc, char **argv)
                 //c.conn("10.6.3.105", 80);
                 //dataOut = "10.6.3.105/";
 
-                std::cout << predicted << std::endl;
+                //std::cout << predicted << std::endl;
 
                 if (predicted == 1)
-                {
-                    std::cout << std::endl
-                              << "Direita" << std::endl
-                              << std::endl;
+                {   
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Direita";
+                    std::cout << listaComandos << std::endl;
                     //listaComandos.push_back('d');
                     auxOut = 'd';
                     dataOut += auxOut;
                     //send some data
-                    std::cout << std::endl
-                              << dataOut << std::endl
-                              << std::endl;
+                    // std::cout << dataOut << std::endl
+                    //           << std::endl;
                 }
                 else if (predicted == -1)
                 {
-                    std::cout << std::endl
-                              << "Esquerda" << std::endl
-                              << std::endl;
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Esquerda";
+                    std::cout << listaComandos << std::endl;
                     //listaComandos.push_back('e');
                     auxOut = 'e';
                     dataOut += auxOut;
-                    std::cout << std::endl
-                              << dataOut << std::endl
-                              << std::endl;
+                    // std::cout << std::endl
+                    //           << dataOut << std::endl
+                    //           << std::endl;
                 }
                 else if (predicted == 2)
                 {
-                    std::cout << std::endl
-                              << "Frente" << std::endl
-                              << std::endl;
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Frente";
+                    std::cout << listaComandos << std::endl;
                     //listaComandos.push_back('f');
                     auxOut = 'f';
                     dataOut += auxOut;
-                    std::cout << std::endl
-                              << dataOut << std::endl
-                              << std::endl;
+                    // std::cout << std::endl
+                    //           << dataOut << std::endl
+                    //           << std::endl;
                 }
                 else if (predicted == -2)
                 {
-                    std::cout << std::endl
-                              << "Tras" << std::endl
-                              << std::endl;
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Tras";
+                    std::cout << listaComandos << std::endl;
                     //listaComandos.push_back('t');
                     auxOut = 't';
                     dataOut += auxOut;
-                    std::cout << std::endl
-                              << dataOut << std::endl
-                              << std::endl;
+                    // std::cout << std::endl
+                    //           << dataOut << std::endl
+                    //           << std::endl;
                 }
                 else if (predicted == 3)
                 {
-                    std::cout << std::endl
-                              << "Close" << std::endl
-                              << std::endl;
                     auxOut = 'c';
                     dataOut += auxOut;
-                    std::cout << std::endl
-                              << dataOut << std::endl
-                              << std::endl;
+                    // std::cout << std::endl
+                    //           << dataOut << std::endl
+                    //           << std::endl;
 
-                    if (contLoop == 0)
+                    if (contLoop == 0 && contIf == 0)
                     {
                         char teste[dataOut.length()];
                         strcpy(teste, dataOut.c_str());
+                        identacao.clear();
 
                         curl = curl_easy_init();
                         if (curl)
@@ -1371,39 +1375,55 @@ void Test::GeralUDP(int argc, char **argv)
                                   << "ENVIADO" << std::endl
                                   << std::endl;
 
+                        identacao.clear();
                         dataOut = "http://10.0.0.102/";
                     }
                     else
-                    {
-                        contLoop--;
+                    {   
+                        identacao.erase(0,1);
+                        if(blocos.top() == 'l'){
+                            blocos.pop();
+                            contLoop--;
+                        }
+                        else if(blocos.top() == 'i'){
+                            blocos.pop();
+                            contIf--;
+                        }
                     }                  
                 }
                 else if (predicted == -3)
-                {
-                    std::cout << std::endl
-                              << "If" << std::endl
-                              << std::endl;
+                {   
+                    contIf++;
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "If";
+                    std::cout << listaComandos << std::endl;
                     auxOut = 'i';
                     dataOut += auxOut;
-                    std::cout << std::endl
-                              << dataOut << std::endl
-                              << std::endl;
+                    // std::cout << std::endl
+                    //           << dataOut << std::endl
+                    //           << std::endl;
+                    identacao.insert(0,"\t");
+                    blocos.push(auxOut);
                 }
-                else
+                else if(predicted == 4)
                 {
-                    std::cout << std::endl
-                              << "Loop" << std::endl
-                              << std::endl;
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Loop";
+                    std::cout << listaComandos << std::endl;
                     //listaComandos.push_back('l');
                     auxOut = 'l';
                     dataOut += auxOut;
                     contLoop++;
-                    std::cout << std::endl
-                              << "Abriu Loop" << contLoop << std::endl
-                              << std::endl;
-                    std::cout << std::endl
-                              << dataOut << std::endl
-                              << std::endl;
+                    // std::cout << std::endl
+                    //           << "Abriu Loop" << contLoop << std::endl
+                    //           << std::endl;
+                    // std::cout << std::endl
+                    //           << dataOut << std::endl
+                    //           << std::endl;
+                    identacao.insert(0, "\t");
+                    blocos.push(auxOut);
                 }
             }
         }
