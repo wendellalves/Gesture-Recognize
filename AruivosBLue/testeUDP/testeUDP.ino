@@ -1,12 +1,12 @@
 #include <ESP8266WiFi.h>
 
-const char* ssid = "12345678g";
-const char* password = "12345678g";
+const char *ssid = "12345678g";
+const char *password = "12345678g";
 
-#define me1 D1
-#define me2 D3
-#define md1 D2
-#define md2 D4
+#define vele D1
+#define sente D3
+#define veld D2
+#define sentd D4
 #define tempo 1000
 #define tempogiro 100
 #define tempopara 500
@@ -24,33 +24,38 @@ String comandos;
 // specify the port to listen on as an argument
 WiFiServer server(80);
 
-bool delay2(int max) {
+bool delay2(int max)
+{
   int tmp = millis();
-  while (millis() - tmp < max) {
-    if (conexao.available()) {
+  while (millis() - tmp < max)
+  {
+    if (client.available())
+    {
       return true;
     }
   }
   return false;
 }
 
-void parar() {
-  digitalWrite(me1, 0);
-  digitalWrite(me2, 0);
-  digitalWrite(md1, 0);
-  digitalWrite(md2, 0);
+void parar()
+{
+  digitalWrite(vele, 0);
+  digitalWrite(sente, 0);
+  digitalWrite(veld, 0);
+  digitalWrite(sentd, 0);
   delay2(tempopara);
 }
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   delay(10);
 
   // prepare GPIO2
-  pinMode(me1, OUTPUT);
-  pinMode(me2, OUTPUT);
-  pinMode(md1, OUTPUT);
-  pinMode(md2, OUTPUT);
+  pinMode(vele, OUTPUT);
+  pinMode(sente, OUTPUT);
+  pinMode(veld, OUTPUT);
+  pinMode(sentd, OUTPUT);
   parar();
 
   // Connect to WiFi network
@@ -62,7 +67,8 @@ void setup() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
     Serial.print(".");
   }
@@ -77,144 +83,215 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void startServer(){
-  // Check if a client has connected
-  client = server.available();
+// void startServer()
+// {
+//   // Check if a client has connected
+//   client = server.available();
 
-  if (!client) {
-    return;
-  }
+//   if (!client)
+//   {
+//     return;
+//   }
 
-  // Wait until the client sends some data
-  Serial.println("new client");
-  while (!client.available()) {
-    delay(1);
-  }
-}
+//   // Wait until the client sends some data
+//   Serial.println("new client");
+//   while (!client.available())
+//   {
+//     delay(1);
+//   }
+// }
 
-void frente() {
-  digitalWrite(me1, 128);
-  digitalWrite(me2, 0);
-  digitalWrite(md1, 128);
-  digitalWrite(md2, 0);
+void frente()
+{
+  digitalWrite(vele, 128);
+  digitalWrite(sente, 0);
+  digitalWrite(veld, 128);
+  digitalWrite(sentd, 0);
   delay2(tempo);
 }
 
-void tras() {
-  digitalWrite(me1, 1);
-  digitalWrite(me2, 1);
-  digitalWrite(md1, 1);
-  digitalWrite(md2, 1);
+void tras()
+{
+  digitalWrite(vele, 128);
+  digitalWrite(sente, 1);
+  digitalWrite(veld, 128);
+  digitalWrite(sentd, 1);
   delay2(tempo);
-  Serial.println("entrou na tras");
 }
 
-void direita() {
-  digitalWrite(me1, 1);
-  digitalWrite(me2, 0);
-  digitalWrite(md1, 0);
-  digitalWrite(md2, 1);
+void direita()
+{
+  digitalWrite(vele, 128);
+  digitalWrite(sente, 0);
+  digitalWrite(veld, 128);
+  digitalWrite(sentd, 1);
   delay2(tempogiro);
 }
 
-void esquerda() {
-  digitalWrite(me1, 1);
-  digitalWrite(me2, 1);
-  digitalWrite(md1, 0);
-  digitalWrite(md2, 0);
+void esquerda()
+{
+  digitalWrite(vele, 128);
+  digitalWrite(sente, 1);
+  digitalWrite(veld, 128);
+  digitalWrite(sentd, 0);
   delay2(tempogiro);
 }
 
-void pulaAteC(int& PC, char  comandos[]) {
+void pulaAteC(int &PC, String comandos)
+{
   int cont = -1;
-  while (1) {
-    if (comandos[PC] == 'l' || comandos[PC] == 'i') {
-      cont ++;
-    } else if (comandos[PC] == 'c' && cont > 0) {
-      cont --;
-    } else if (comandos[PC] == 'c' && cont == 0) {
+  while (1)
+  {
+    if (comandos.charAt(PC) == 'l' || comandos.charAt(PC) == 'i')
+    {
+      cont++;
+    }
+    else if (comandos.charAt(PC) == 'c' && cont > 0)
+    {
+      cont--;
+    }
+    else if (comandos.charAt(PC) == 'c' && cont == 0)
+    {
       break;
     }
     PC++;
   }
 }
-bool ifLOOP(char COND) {
-  switch (COND) {
-    case 'y':
-      return true;
-      break;
-    case 'n':
-      return false;
-      break;
+bool ifLOOP(char COND)
+{
+  switch (COND)
+  {
+  case 'y':
+    return true;
+    break;
+  case 'n':
+    return false;
+    break;
   }
 }
-bool ifIF(char COND) {
-  switch (COND) {
-    case 'y':
-      return true;
-      break;
-    case 'n':
-      return false;
-      break;
+bool ifIF(char COND)
+{
+  switch (COND)
+  {
+  case 'y':
+    return true;
+    break;
+  case 'n':
+    return false;
+    break;
   }
 }
-void compiler() {
+void compiler(String comandos, int i)
+{
   int S[tam];
   int SP = 0;
-  for (int PC = 0; PC < tam; PC++) {
-    switch (comandos[PC]) {
-      //...
-      case 'i':
-        if (ifIF(comandos[PC + 1])) {
-          PC++;
-          SP++;
-          S[SP] = PC;
-        } else {
-          pulaAteC(PC, comandos);
+  for (int PC = 0; PC < tam; PC++)
+  {
+    switch (comandos.charAt(PC))
+    {
+    //...
+    case 'd':
+      // girar para direita
+      Serial.println("Direita");
+      direita();
+      //frente();
+      parar();
+      break;
+    case 'e':
+      // girar para esquerda
+      Serial.println("Esquerda");
+      esquerda();
+      //frente();
+      parar();
+      break;
+    case 'f':
+      // ir em frente
+      Serial.println("Frente");
+      frente();
+      parar();
+      break;
+    case 't':
+      // ir para tras
+      Serial.println("Tras");
+      tras();
+      parar();
+      break;
+    case 'i':
+      if (ifIF(comandos.charAt(PC + 1)))
+      {
+        PC++;
+        SP++;
+        S[SP] = PC;
+      }
+      else
+      {
+        pulaAteC(PC, comandos);
+      }
+      break;
+    case 'l':
+      if (ifLOOP(comandos.charAt(PC + 1)))
+      {
+        PC++;
+        SP++;
+        S[SP] = PC;
+      }
+      else
+      {
+        pulaAteC(PC, comandos);
+      }
+      break;
+    case 'c':
+      if (comandos.charAt(S[SP] - 1) == 'l')
+      {
+        if (ifLOOP(comandos.charAt(S[SP])))
+        {
+          PC = S[SP];
         }
-        break;
-      case 'l':
-        if (ifLOOP(comandos[PC + 1])) {
-          PC++;
-          SP++;
-          S[SP] = PC;
-        } else {
-          pulaAteC(PC, comandos);
-        }
-        break;
-      case 'c':
-        if (comandos[S[SP] - 1] == 'l') {
-          if (ifLOOP(comandos[S[SP]])) {
-            PC = S[SP];
-          } else {
-            SP--;
-          }
-        } else if (comandos[S[SP] - 1] == 'l') {
+        else
+        {
           SP--;
         }
-        break;
-      default:
-        cout << "EXECUTA:" << PC << endl;
-        break;
+      }
+      else if (comandos.charAt(S[SP] - 1) == 'l')
+      {
+        SP--;
+      }
+      break;
+    default:
+      Serial.print("EXECUTA: ");
+      Serial.println(PC);
+      break;
     }
   }
 }
 
+void servidor()
+{
 
-void servidor() {
-  
+  client = server.available();
+
+  if (!client)
+  {
+    return;
+  }
+
+  // Wait until the client sends some data
+  Serial.println("new client");
+  while (!client.available())
+  {
+    delay(1);
+  }
 
   // Read the first line of the request
   String req = client.readStringUntil('\r');
   Serial.println(req);
 
   comandos = req.substring(req.indexOf("/"));
-  Serial.print("Comandos = "); Serial.println(comandos);
+  Serial.print("Comandos = ");
+  Serial.println(comandos);
 
   flag = 1;
   client.flush();
-
-
 
   //client.flush();
   int val;
@@ -232,8 +309,9 @@ void servidor() {
   // when the function returns and 'client' object is detroyed
 }
 
-void loop() {
-  startServer();
+void loop()
+{
+  //startServer();
   servidor();
   i = 0;
 
@@ -241,4 +319,3 @@ void loop() {
     compiler(comandos, i);
   flag = 0;
 }
-

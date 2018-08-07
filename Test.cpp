@@ -1099,7 +1099,7 @@ void Test::GeralUDP(int argc, char **argv)
     char auxOut;
     std::stack<char> blocos;
     //dataOut = "192.168.0.20/";
-    dataOut = "http://10.0.0.102/";
+    dataOut = "http://10.0.0.101/";
     //dataOut = new std::string(&argv[3]);
 
     //aux2 = ".csv";
@@ -1376,7 +1376,7 @@ void Test::GeralUDP(int argc, char **argv)
                                   << std::endl;
 
                         identacao.clear();
-                        dataOut = "http://10.0.0.102/";
+                        dataOut = "http://10.0.0.101/";
                     }
                     else
                     {   
