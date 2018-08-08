@@ -1,7 +1,7 @@
 #include <list>
 #include "program.h"
 
-void pulaAteC(int& PC, std::list<char> CMDs){
+void pulaAteC(int& PC, std::list<char>  CMDs[]){
 	int cont = -1;    
 	while(1){ 
 		if(CMDs[PC] == 'L' || CMDs[PC] == 'I'){
