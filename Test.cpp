@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <curl/curl.h>
 #include <stack>
+#include <list>
 
 using namespace cv::ml;
 
@@ -1118,7 +1119,8 @@ void Test::GeralUDP(int argc, char **argv)
             if ((300 < vision.getCenter().x && vision.getCenter().x < 340) &&
                 (220 < vision.getCenter().y && vision.getCenter().y < 260) /*cv::waitKey(1) == 110*/) // Press "n"
             {
-                std::cout << "Iniciou a gravação" << std::endl;
+                //std::cout << "Iniciou a gravação" << std::endl;
+                vision.setIniciou(true);
                 //aux = std::to_string(cont);
 
                 //dataIn += aux;
@@ -1428,6 +1430,239 @@ void Test::GeralUDP(int argc, char **argv)
             }
         }
     }
+}
+
+void Test::GeralRasBot(int argc, char **argv)
+{
+    //Test test;
+
+    Vision vision(argc, argv);
+
+    CURL *curl;
+    CURLcode res;
+
+    //test.trainSVM();
+
+    std::string dataIn, aux, aux2, dataOut, dataOutAux, identacao, listaComandos;
+    char auxOut;
+    std::stack<char> blocos;
+    std::list<char> programacao;
+    
+    int cont = 1, contLoop = 0, contIf = 0;
+    dataIn = "resultados/teste.csv";
+
+    while (1)
+    {
+        vision.calculateTagCenter();
+        if (vision.isTargetOn())
+        {
+
+            vision.show();
+            //std::cout << vision.getCenter().x << " " << vision.getCenter().y << std::endl;
+            if ((300 < vision.getCenter().x && vision.getCenter().x < 340) &&
+                (220 < vision.getCenter().y && vision.getCenter().y < 260) /*cv::waitKey(1) == 110*/) // Press "n"
+            {
+                //std::cout << "Iniciou a gravação" << std::endl;
+                vision.setIniciou(true);
+                //aux = std::to_string(cont);
+
+                //dataIn += aux;
+                //dataIn += aux2;
+
+                // dataIn = "resultados/teste";
+                // dataIn += aux2;
+
+                vision.saveMovement(dataIn);
+
+                //vision.record("../Samples/sample.avi");
+
+                while (1)
+                {
+                    vision.calculateTagCenter();
+
+                    if (vision.isTargetOn())
+                    {
+                        vision.savePoint(vision.getCenter());
+                    }
+
+                    vision.show();
+                    //vision.saveVideo();
+                    //std::cout << vision.getCenter().x << " " << vision.getCenter().y << std::endl;
+                    if (((10 < vision.getCenter().x && vision.getCenter().x < 50) ||
+                         (590 < vision.getCenter().x && vision.getCenter().x < 630)) ||
+                        ((10 < vision.getCenter().y && vision.getCenter().y < 50) ||
+                         (430 < vision.getCenter().y && vision.getCenter().y < 470))) //cv::waitKey(1) == 27) //Press "Esc"
+                    {
+
+                        cont++;
+                        break;
+                    }
+                    //cout << "salvando o centro" << endl;
+                }
+
+                vision.endSaving();
+                std::cout << "Salvou!" << std::endl;
+                int cont = 0, linhas, colunas = 2;
+                std::string arquivoIn, arquivoOut;
+
+                arquivoIn = "resultados/teste.csv";
+                arquivoOut = "resultados/testeIn.csv";
+                //arquivoIn = "data/dadosAruco/DE.csv";
+                //arquivoOut = "data/dadosAruco/DEOrganizado.csv";
+
+                // Creating an object of CSVWriter
+                CSVReader reader(arquivoIn);
+
+                std::ofstream myfile;
+                myfile.open(arquivoOut);
+
+                // Get the data from CSV File
+                std::vector<std::vector<std::string>> dataList = reader.getData();
+
+                linhas = dataList.size();
+
+                myfile << linhas << " " << colunas << "\n";
+
+                for (std::vector<std::string> vec : dataList)
+                {
+                    for (std::string data : vec)
+                    {
+                        myfile << data;
+                        myfile << " ";
+                        cont++;
+                        if (cont == 2)
+                        {
+                            myfile << "\n";
+                            cont = 0;
+                        }
+                    }
+                }
+                //std::cout << dataList.size();
+
+                myfile.close();
+
+                int tam = 10, iImagem, jImagem;
+                int tamImagem = tam * 80; // para uma resolucao maior
+                cv::Mat image(tamImagem, tamImagem, 0);
+                cv::Mat imagem(tam, tam, 0);
+                std::string posImagem;
+                SOM som(tam);
+                DataSet data;
+                Sample *s;
+                //Node* vencedor;
+                //std::vector <Node*> vencedores; // v = find  ...
+
+                std::string dataInSOM, imageOutVisual, imageOutTrain;
+
+                //int imagem[tamImagem][tamImagem];
+
+                som.loadNetworkAruco("visualization/treinamentoAruco/2500000.csv", tam);
+
+                for (int i = 0; i < tamImagem; i++)
+                {
+                    for (int j = 0; j < tamImagem; j++)
+                    {
+                        //imagem[i][j] = 0;
+                        image.at<uchar>(i, j) = 0;
+                    }
+                }
+
+                for (int i = 0; i < tam; i++)
+                {
+                    for (int j = 0; j < tam; j++)
+                    {
+                        imagem.at<uchar>(i, j) = 0;
+                    }
+                }
+
+                dataInSOM = "resultados/testeIn.csv";
+
+                imageOutVisual = "resultados/visual.jpg";
+
+                imageOutTrain = "resultados/teste.jpg";
+
+                data.loadDataFromFile(dataInSOM);
+
+                s = data.getRandomSample();
+                som.findWinner(s, iImagem, jImagem);
+
+                while (!(data.getRandomSample(s)))
+                {
+                    som.findWinner(s, iImagem, jImagem);
+
+                    imagem.at<uchar>(iImagem, jImagem) = 255;
+
+                    for (int i = iImagem * 80; i < (iImagem * 80 + 80); i++)
+                    {
+                        for (int j = jImagem * 80; j < (jImagem * 80 + 80); j++)
+                        {
+                            image.at<uchar>(i, j) = 255;
+                        }
+                    }
+                }
+
+                //cv::imshow("Nodes", image);
+                cv::imwrite(imageOutVisual, image);
+                cv::imwrite(imageOutTrain, imagem);
+                //cv::waitKey();
+
+                int ii = 0;
+                cv::Mat imagem2 = cv::imread("resultados/teste.jpg", 0);
+                int lin = imagem2.rows, col = imagem2.cols;
+                int tamImg = lin * col;
+
+                cv::Mat imagem1D(1, tamImg, CV_32FC1);
+                cv::Ptr<SVM> svm;
+                svm = cv::Algorithm::load<SVM>("knowledge.yml");
+
+                for (int i = 0; i < lin; i++)
+                {
+                    for (int j = 0; j < col; j++)
+                    {
+                        imagem1D.at<float>(0, ii++) = imagem2.at<uchar>(i, j);
+                    }
+                }
+
+                int predicted = svm->predict(imagem1D);
+
+                if (predicted == 1)
+                {   
+                    programacao.push_back('d');
+                }
+                else if (predicted == -1)
+                {
+                    programacao.push_back('e');
+                }
+                else if (predicted == 2)
+                {
+                    programacao.push_back('f');
+                }
+                else if (predicted == -2)
+                {
+                    programacao.push_back('t');
+                }
+                else if (predicted == 3)
+                {
+                    programacao.push_back('c');
+                    programar(programacao);
+                    programacao.clear();
+                    
+                }
+                else if (predicted == -3)
+                {   
+                    programacao.push_back('i');
+                }
+                else if(predicted == 4)
+                {
+                    programacao.push_back('l');
+                }
+            }
+        }
+    }
+}
+
+void Test::programar(std::list<char> _programacao){
+    
 }
 
 Test::~Test()

@@ -108,6 +108,7 @@ class Vision
     void printMenuInfo();
     cv::Mat resizeImage(cv::Mat &in, float resizeFactor);
     void cvTackBarEvents(int pos, void *);
+    bool iniciou = false;
 
   public:
     Vision(int argc, char **argv);
@@ -123,7 +124,8 @@ class Vision
     {
         flip(TheInputImageCopy, TheInputImageCopy, 1);
         int radius = 40;
-        cv::Point ptCenter, ptHorI, ptHorF, ptVerI, ptVerF, ptDiagI, ptDiagF, ptRecF;
+        cv::Point ptCenter, ptHorI, ptHorF, ptVerI, ptVerF, ptDiagI, ptDiagF, ptRecF, posText;
+        posText.x = 0, posText.y = 480;
         ptHorI.x = 0;
         ptHorI.y = TheInputImageCopy.size().height / 2;
         ptHorF.x = TheInputImageCopy.size().width;
@@ -145,11 +147,14 @@ class Vision
         cv::line(TheInputImageCopy, ptVerI, ptVerF, cv::Scalar(255, 0, 0), 1);
         cv::line(TheInputImageCopy, ptDiagI, ptDiagF, cv::Scalar(0, 255, 255), 1);
         cv::rectangle(TheInputImageCopy, ptCenter / 2, ptRecF, cv::Scalar(255, 0, 255), 1);
+        std::string text = "Iniciou";
+        if(iniciou)
+            cv::putText(TheInputImageCopy, text, posText, 3, 2, cv::Scalar(0, 255, 0), 2, 8);
         imshow("in", TheInputImageCopy);
     }
 
     void record(std::string filename);
-
+    void setIniciou(bool _iniciou=false){iniciou = _iniciou;}
     void saveMovement(std::string file);
     void savePoint(cv::Point pos);
     void endSaving();

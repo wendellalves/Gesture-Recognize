@@ -12,6 +12,7 @@
 #include "DataSet.h"
 #include <fstream>
 #include "tcp_client.h"
+#include <list>
 
 class Test {
 public:
@@ -34,6 +35,8 @@ public:
     void loadLoadNetwork();
     void Geral(int argc, char** argv);
     void GeralUDP(int argc, char** argv);
+    void GeralRasBot(int argc, char** argv);
+    void programar(std::list<char> _programacao);
     void dados(int argc, char** argv);
     void tcpClient();
     void udp_client();
