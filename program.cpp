@@ -1,20 +1,19 @@
-#include <list>
 #include "program.h"
 
-void pulaAteC(int& PC, std::list<char>  CMDs[]){
+void Program::pulaAteC(int& PC, char CMDs[]){
 	int cont = -1;    
 	while(1){ 
-		if(CMDs[PC] == 'L' || CMDs[PC] == 'I'){
+		if(CMDs[PC] == 'l' || CMDs[PC] == 'i'){
 			cont ++;
-		}else if(CMDs[PC] == 'C' && cont > 0){
+		}else if(CMDs[PC] == 'c' && cont > 0){
 			cont --;
-		}else if(CMDs[PC] == 'C' && cont == 0){
+		}else if(CMDs[PC] == 'c' && cont == 0){
 			break;
 		}
 		PC++;
 	}
 } 	
-bool ifLOOP(char COND){
+bool Program::ifLOOP(char COND){
     switch(COND){
         case 'Y':
             return true;
@@ -24,7 +23,7 @@ bool ifLOOP(char COND){
         break;
     }
 }
-bool ifIF(char COND){
+bool Program::ifIF(char COND){
     switch(COND){
         case 'Y':
             return true;

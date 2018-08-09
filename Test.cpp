@@ -21,6 +21,8 @@
 #include <curl/curl.h>
 #include <stack>
 #include <list>
+#include "program.h"
+#include "RasBot.h"
 
 using namespace cv::ml;
 
@@ -667,7 +669,7 @@ void Test::loadSVM2()
         std::cout << std::endl
                   << "If" << std::endl
                   << std::endl;
-    else if(predicted == 4)
+    else if (predicted == 4)
         std::cout << std::endl
                   << "Loop" << std::endl
                   << std::endl;
@@ -1293,7 +1295,7 @@ void Test::GeralUDP(int argc, char **argv)
                 //std::cout << predicted << std::endl;
 
                 if (predicted == 1)
-                {   
+                {
                     listaComandos += "\n";
                     listaComandos += identacao;
                     listaComandos += "Direita";
@@ -1381,20 +1383,22 @@ void Test::GeralUDP(int argc, char **argv)
                         dataOut = "http://10.0.0.101/";
                     }
                     else
-                    {   
-                        identacao.erase(0,1);
-                        if(blocos.top() == 'l'){
+                    {
+                        identacao.erase(0, 1);
+                        if (blocos.top() == 'l')
+                        {
                             blocos.pop();
                             contLoop--;
                         }
-                        else if(blocos.top() == 'i'){
+                        else if (blocos.top() == 'i')
+                        {
                             blocos.pop();
                             contIf--;
                         }
-                    }                  
+                    }
                 }
                 else if (predicted == -3)
-                {   
+                {
                     contIf++;
                     listaComandos += "\n";
                     listaComandos += identacao;
@@ -1405,10 +1409,10 @@ void Test::GeralUDP(int argc, char **argv)
                     // std::cout << std::endl
                     //           << dataOut << std::endl
                     //           << std::endl;
-                    identacao.insert(0,"\t");
+                    identacao.insert(0, "\t");
                     blocos.push(auxOut);
                 }
-                else if(predicted == 4)
+                else if (predicted == 4)
                 {
                     listaComandos += "\n";
                     listaComandos += identacao;
@@ -1447,7 +1451,7 @@ void Test::GeralRasBot(int argc, char **argv)
     char auxOut;
     std::stack<char> blocos;
     std::list<char> programacao;
-    
+
     int cont = 1, contLoop = 0, contIf = 0;
     dataIn = "resultados/teste.csv";
 
@@ -1626,43 +1630,179 @@ void Test::GeralRasBot(int argc, char **argv)
                 int predicted = svm->predict(imagem1D);
 
                 if (predicted == 1)
-                {   
+                {
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Direita";
+                    std::cout << listaComandos << std::endl;
                     programacao.push_back('d');
                 }
                 else if (predicted == -1)
                 {
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Esquerda";
+                    std::cout << listaComandos << std::endl;
                     programacao.push_back('e');
                 }
                 else if (predicted == 2)
                 {
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Frente";
+                    std::cout << listaComandos << std::endl;
                     programacao.push_back('f');
                 }
                 else if (predicted == -2)
                 {
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Tras";
+                    std::cout << listaComandos << std::endl;
                     programacao.push_back('t');
                 }
                 else if (predicted == 3)
                 {
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Close";
+                    std::cout << listaComandos << std::endl;
                     programacao.push_back('c');
-                    programar(programacao);
-                    programacao.clear();
-                    
+                    if (contLoop == 0 && contIf == 0)
+                    {
+                        identacao.clear();
+                        int tamArray = programacao.size();
+                        char programacaoArray[tamArray];
+                        for (int i = 0; i < programacao.size(); i++)
+                        {
+                            programacaoArray[i] = programacao.front();
+                            programacao.pop_front();
+                        }
+                        programar(programacaoArray, tamArray);
+                        programacao.clear();
+
+                        std::cout << std::endl
+                                  << "ENVIADO" << std::endl
+                                  << std::endl;
+                    }
+                    else
+                    {
+                        identacao.erase(0, 1);
+                        if (blocos.top() == 'l')
+                        {
+                            blocos.pop();
+                            contLoop--;
+                        }
+                        else if (blocos.top() == 'i')
+                        {
+                            blocos.pop();
+                            contIf--;
+                        }
+                    }
                 }
                 else if (predicted == -3)
-                {   
-                    programacao.push_back('i');
-                }
-                else if(predicted == 4)
                 {
+                    contIf++;
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "If";
+                    std::cout << listaComandos << std::endl;
+                    programacao.push_back('i');
+                    identacao.insert(0, "\t");
+                    blocos.push('i');
+                }
+                else if (predicted == 4)
+                {
+                    listaComandos += "\n";
+                    listaComandos += identacao;
+                    listaComandos += "Loop";
+                    std::cout << listaComandos << std::endl;
                     programacao.push_back('l');
+                    identacao.insert(0, "\t");
+                    blocos.push('l');
                 }
             }
         }
     }
 }
 
-void Test::programar(std::list<char> _programacao){
-    
+void Test::programar(char CMDs[], int TAM)
+{
+    //char CMDs[TAM] = "AAALYAINACAAC";
+    RasBot bot;
+    Program pro;
+    int velocidade = 50;
+    int S[TAM];
+    int SP = 0;
+    for (int PC = 0; PC < TAM; PC++)
+    {
+        switch (CMDs[PC])
+        {
+        case 'd':
+            std::cout << "Direita" << std::endl;
+            bot.turnR(velocidade);
+            break;
+        case 'e':
+            std::cout << "Esquerda" << std::endl;
+            bot.turnL(velocidade);
+            break;
+        case 'f':
+            std::cout << "Frente" << std::endl;
+            bot.moveF(velocidade);
+            break;
+        case 't':
+            std::cout << "Tras" << std::endl;
+            bot.moveB(velocidade);
+            break;
+        case 'i':
+            std::cout << "If" << std::endl;
+            if (pro.ifIF(CMDs[PC + 1]))
+            {
+                PC++;
+                SP++;
+                S[SP] = PC;
+            }
+            else
+            {
+                pro.pulaAteC(PC, CMDs);
+            }
+            break;
+        case 'l':
+            std::cout << "Loop" << std::endl;
+            if (pro.ifLOOP(CMDs[PC + 1]))
+            {
+                PC++;
+                SP++;
+                S[SP] = PC;
+            }
+            else
+            {
+                pro.pulaAteC(PC, CMDs);
+            }
+            break;
+        case 'c':
+            std::cout << "Close" << std::endl;
+            if (CMDs[S[SP] - 1] == 'l')
+            {
+                if (pro.ifLOOP(CMDs[S[SP]]))
+                {
+                    PC = S[SP];
+                }
+                else
+                {
+                    SP--;
+                }
+            }
+            else if (CMDs[S[SP] - 1] == 'i')
+            {
+                SP--;
+            }
+            break;
+        default:
+            cout << "EXECUTA:" << PC << endl;
+            break;
+        }
+    }
 }
 
 Test::~Test()
