@@ -1467,7 +1467,8 @@ void Test::GeralRasBot(int argc, char **argv)
                 (220 < vision.getCenter().y && vision.getCenter().y < 260) /*cv::waitKey(1) == 110*/) // Press "n"
             {
                 //std::cout << "Iniciou a gravação" << std::endl;
-                vision.setIniciou(true);
+                //vision.setIniciou(true);
+                vision.setEstado(1);
                 //aux = std::to_string(cont);
 
                 //dataIn += aux;
@@ -1505,6 +1506,7 @@ void Test::GeralRasBot(int argc, char **argv)
                 }
 
                 vision.endSaving();
+                vision.setEstado(2);
                 std::cout << "Salvou!" << std::endl;
                 int cont = 0, linhas, colunas = 2;
                 std::string arquivoIn, arquivoOut;
@@ -1681,6 +1683,7 @@ void Test::GeralRasBot(int argc, char **argv)
                         programar(programacaoArray, tamArray);
                         programacao.clear();
 
+                        vision.setEstado(3);
                         std::cout << std::endl
                                   << "ENVIADO" << std::endl
                                   << std::endl;

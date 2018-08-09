@@ -109,6 +109,8 @@ class Vision
     cv::Mat resizeImage(cv::Mat &in, float resizeFactor);
     void cvTackBarEvents(int pos, void *);
     bool iniciou = false;
+    int setTexto = 0;
+    std::string text;
 
   public:
     Vision(int argc, char **argv);
@@ -147,14 +149,32 @@ class Vision
         cv::line(TheInputImageCopy, ptVerI, ptVerF, cv::Scalar(255, 0, 0), 1);
         cv::line(TheInputImageCopy, ptDiagI, ptDiagF, cv::Scalar(0, 255, 255), 1);
         cv::rectangle(TheInputImageCopy, ptCenter / 2, ptRecF, cv::Scalar(255, 0, 255), 1);
-        std::string text = "Iniciou";
-        if(iniciou)
-            cv::putText(TheInputImageCopy, text, posText, 3, 2, cv::Scalar(0, 255, 0), 2, 8);
+        //std::string text = "Iniciou";
+        //if(iniciou)
+        cv::putText(TheInputImageCopy, text, posText, 3, 1, cv::Scalar(0, 255, 0), 1, 8);
         imshow("in", TheInputImageCopy);
     }
 
     void record(std::string filename);
     void setIniciou(bool _iniciou=false){iniciou = _iniciou;}
+    void setEstado(int _setTexto){
+        setTexto = _setTexto;
+        switch (setTexto)
+        {
+            case 1:
+                text = "Iniciou!";
+                break;
+            case 2:
+                text = "Terminou!";
+                break;
+            case 3:
+                text = "Enviou o Programa!";
+                break;
+        
+            default:
+                break;
+        }
+    }
     void saveMovement(std::string file);
     void savePoint(cv::Point pos);
     void endSaving();
