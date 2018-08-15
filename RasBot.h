@@ -8,8 +8,8 @@
 // #define PRINT_DEBUG 
 
 //Default pins
-#define M_LF_PORT 0
-#define M_LB_PORT 1
+#define M_LF_PORT 0 //B do lado esquerdo
+#define M_LB_PORT 1 //A
 #define M_RF_PORT 2
 #define M_RB_PORT 3
 
