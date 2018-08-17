@@ -37,8 +37,8 @@ int main(int argc, char** argv) {
     //test.armInLine();
     //test.arucoDataSet();
     //test.Geral(argc, argv);
-    //test.GeralUDP(argc, argv);
-    test.GeralRasBot(argc, argv);
+    test.GeralUDP(argc, argv);
+    //test.GeralRasBot(argc, argv);
     //test.dados(argc, argv);
     //test.tcpClient();
     //test.udp_client();
