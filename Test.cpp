@@ -23,8 +23,11 @@
 #include <list>
 #include "program.h"
 #include "RasBot.h"
+#include <wiringPi.h>
 
 using namespace cv::ml;
+
+RasBot bot;
 
 Test::Test()
 {
@@ -32,6 +35,12 @@ Test::Test()
 
 Test::Test(const Test &orig)
 {
+}
+
+void delay2(int max)
+{
+  int tmp = millis();
+  while (millis() - tmp < max){}
 }
 
 void Test::leitorCSV()
@@ -1732,8 +1741,9 @@ void Test::GeralRasBot(int argc, char **argv)
 void Test::programar(char CMDs[], int TAM)
 {
     //char CMDs[TAM] = "AAALYAINACAAC";
-    RasBot bot;
+    
     Program pro;
+    int timeDelay = 1000;
     int velocidade = 50;
     int S[TAM];
     int SP = 0;
@@ -1744,18 +1754,22 @@ void Test::programar(char CMDs[], int TAM)
         case 'd':
             std::cout << "Direita" << std::endl;
             bot.turnR(velocidade);
+            delay2(timeDelay);
             break;
         case 'e':
             std::cout << "Esquerda" << std::endl;
             bot.turnL(velocidade);
+            delay2(timeDelay);
             break;
         case 'f':
             std::cout << "Frente" << std::endl;
             bot.moveF(velocidade);
+            delay2(timeDelay);
             break;
         case 't':
             std::cout << "Tras" << std::endl;
             bot.moveB(velocidade);
+            delay2(timeDelay);
             break;
         case 'i':
             std::cout << "If" << std::endl;
@@ -1806,6 +1820,7 @@ void Test::programar(char CMDs[], int TAM)
             break;
         }
     }
+    bot.stop();
 }
 
 Test::~Test()

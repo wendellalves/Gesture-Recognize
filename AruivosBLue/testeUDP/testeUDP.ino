@@ -24,17 +24,10 @@ String comandos;
 // specify the port to listen on as an argument
 WiFiServer server(80);
 
-bool delay2(int max)
+void delay2(int max)
 {
   int tmp = millis();
-  while (millis() - tmp < max)
-  {
-    if (client.available())
-    {
-      return true;
-    }
-  }
-  return false;
+  while (millis() - tmp < max){}
 }
 
 void parar()

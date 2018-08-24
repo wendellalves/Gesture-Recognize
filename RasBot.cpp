@@ -80,7 +80,7 @@ bool RasBot::setPorts(int _mLF_port, int _mLB_port, int _mRF_port, int _mRB_port
     #endif
 
     #ifdef PRINT_DEBUG
-    std::cout << "Config GPIO ... Done" << std::endl;
+    std::cout << "Config GPIO ... Done" << std::endl;   
     #endif
 
     return true;
